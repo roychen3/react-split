@@ -41,4 +41,4 @@ function Component() {
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[LICENSE](LICENSE)
