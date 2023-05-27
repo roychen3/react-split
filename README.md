@@ -18,8 +18,6 @@ npm install
 
 ## Usage
 
-### Horizontal & Flex
-
 ```javascript
 import Split from './Split';
 
