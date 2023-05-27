@@ -1,0 +1,31 @@
+/* split styles */
+.split.split--horizontal {
+  display: inline-flex;
+  height: 100%;
+}
+.split.split--horizontal.split--fixed-container {
+  display: flex;
+}
+.split.split--vertical {
+  display: flex;
+  flex-direction: column;
+}
+.split.split--vertical.split--fixed-container {
+  height: 100%;
+  overflow-y: hidden;
+}
+
+
+/* gutter styles */
+.gutter {
+  background-color: #ddd;
+}
+.gutter--horizontal {
+  cursor: col-resize;
+  min-width: 10px;
+}
+.gutter--vertical {
+  cursor: row-resize;
+  width: 100%;
+  min-height: 10px;
+}

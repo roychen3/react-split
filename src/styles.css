@@ -1,0 +1,23 @@
+.App {
+  font-family: sans-serif;
+  padding: 0 2rem;
+}
+
+/* ================ */
+
+.container {
+  outline: 2px dashed #ddd;
+}
+.container-horizontal {
+  overflow-x: auto;
+  width: 100%;
+  height: 100px;
+}
+.container-vertical {
+  overflow-y: auto;
+  height: 70vh;
+}
+
+.block {
+  background-color: aqua;
+}
