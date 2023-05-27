@@ -2,6 +2,12 @@
 
 Split element
 
+## Getting Started
+
+```bash
+npm run start
+```
+
 ## Installation
 
 node v16.15.0
