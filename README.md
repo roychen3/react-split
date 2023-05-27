@@ -24,8 +24,9 @@ import Split from './Split';
 function Component() {
   return (
     <Split 
-      direction // string: 'horizontal' | 'vertical'
-      flexContainer // boolean
+      children      // ReactNode
+      direction     // 'horizontal' | 'vertical' | undefined
+      flexContainer // boolean | undefined
     >
       <div className="block">A Component</div>
       <div className="block">B Component</div>
