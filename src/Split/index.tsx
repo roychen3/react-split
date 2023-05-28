@@ -32,14 +32,14 @@ const Split = ({
     if (direction === 'horizontal') {
       className += ' split--horizontal';
       if (flexContainer) {
-        className += ' split--fixed-container';
+        className += ' split--flex-container';
       }
     }
 
     if (direction === 'vertical') {
       className += ' split--vertical';
       if (flexContainer) {
-        className += ' split--fixed-container';
+        className += ' split--flex-container';
       }
     }
 
