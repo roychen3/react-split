@@ -11,6 +11,7 @@ const Split = ({
   onGutterDown,
   onGutterMove,
   onGutterUp,
+  ...props
 }: SplitProps) => {
   const renderChildren = () => {
     if (children instanceof Array) {
@@ -55,7 +56,11 @@ const Split = ({
     return className;
   };
   const splitClassName = getSplitClassName();
-  return <div className={splitClassName}>{splitChildren}</div>;
+  return (
+    <div className={splitClassName} {...props}>
+      {splitChildren}
+    </div>
+  );
 };
 
 export default Split;

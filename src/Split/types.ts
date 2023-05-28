@@ -17,7 +17,7 @@ export interface GutterProps {
   onGutterUp?: (event: MouseEvent) => void;
 }
 
-export interface SplitProps {
+export interface SplitProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
   direction?: Direction;
   flexContainer?: boolean;
