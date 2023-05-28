@@ -8,6 +8,9 @@ const Split = ({
   children,
   direction = 'horizontal',
   flexContainer = true,
+  onGutterDown,
+  onGutterMove,
+  onGutterUp,
 }: SplitProps) => {
   const renderChildren = () => {
     if (children instanceof Array) {
@@ -18,7 +21,13 @@ const Split = ({
         return (
           <Fragment key={idx}>
             {eachChild}
-            <Gutter direction={direction} flexContainer={flexContainer} />
+            <Gutter
+              direction={direction}
+              flexContainer={flexContainer}
+              onGutterDown={onGutterDown}
+              onGutterMove={onGutterMove}
+              onGutterUp={onGutterUp}
+            />
           </Fragment>
         );
       });

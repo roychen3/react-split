@@ -13,6 +13,9 @@ const defaultSiblingElement: SiblingInfo = {
 const Gutter = ({
   direction = 'horizontal',
   flexContainer = true,
+  onGutterDown,
+  onGutterMove,
+  onGutterUp,
 }: GutterProps) => {
   const gutterRef = useRef<HTMLDivElement>(null);
   const previousSiblingInfoRef = useRef<SiblingInfo>(defaultSiblingElement);
@@ -44,6 +47,7 @@ const Gutter = ({
         element: gutterRef.current.nextSibling,
       };
     }
+    onGutterDown?.(event.nativeEvent);
   };
 
   useEffect(() => {
@@ -185,10 +189,12 @@ const Gutter = ({
           fixedMode(moveDistance, direction);
         }
       }
+      onGutterMove?.(event);
     };
     const onMouseUp = (event: MouseEvent) => {
       event.preventDefault();
       setMouseDown(false);
+      onGutterUp?.(event);
     };
 
     if (mouseDown) {

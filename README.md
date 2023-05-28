@@ -27,6 +27,9 @@ function Component() {
       children      // ReactNode
       direction     // 'horizontal' | 'vertical' | undefined
       flexContainer // boolean | undefined
+      onGutterDown  // (event: MouseEvent) => void | undefined
+      onGutterMove  // (event: MouseEvent) => void | undefined
+      onGutterUp    // (event: MouseEvent) => void | undefined
     >
       <div className="block">A Component</div>
       <div className="block">B Component</div>
