@@ -9,7 +9,12 @@ export type MousePosition = { x: number; y: number };
 
 export type Direction = 'horizontal' | 'vertical';
 
-export interface GutterProps {
+type GutterHTMLProps = Omit<React.HTMLProps<HTMLDivElement>,
+  | 'ref'
+  | 'className'
+  | 'onMouseDown'
+>
+export interface GutterProps extends GutterHTMLProps {
   index: number;
   direction?: Direction;
   flexContainer?: boolean;

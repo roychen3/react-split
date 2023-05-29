@@ -10,6 +10,7 @@ const Split = ({
   direction = 'horizontal',
   flexContainer = true,
   itemSizes = [],
+  gutterStyle,
   onGutterDown,
   onGutterMove,
   onGutterUp,
@@ -30,6 +31,7 @@ const Split = ({
             </div>
             <Gutter
               index={idx}
+              style={gutterStyle}
               direction={direction}
               flexContainer={flexContainer}
               itemSizes={itemSizes}
@@ -65,7 +67,7 @@ const Split = ({
   };
   const splitClassName = getSplitClassName();
   return (
-    <div className={splitClassName} {...props}>
+    <div {...props} className={`${splitClassName}${props.className ? ` ${props.className}` : ''}`}>
       {splitChildren}
     </div>
   );

@@ -19,6 +19,7 @@ const Gutter = ({
   onGutterDown,
   onGutterMove,
   onGutterUp,
+  ...props
 }: GutterProps) => {
   const gutterRef = useRef<HTMLDivElement>(null);
   const previousSiblingInfoRef = useRef<SiblingInfo>(defaultSiblingElement);
@@ -233,6 +234,7 @@ const Gutter = ({
 
   return (
     <div
+      {...props}
       ref={gutterRef}
       className={gutterClassName}
       onMouseDown={onMouseDown}
