@@ -10,6 +10,16 @@ const defaultSiblingElement: SiblingInfo = {
   element: null,
 };
 
+const getStyleKey = (direction: Direction): 'width' | 'height' => {
+  switch (direction) {
+    case 'horizontal':
+      return 'width';
+
+    case 'vertical':
+      return 'height';
+  }
+};
+
 const Gutter = ({
   direction = 'horizontal',
   flexContainer = true,
@@ -51,15 +61,6 @@ const Gutter = ({
   };
 
   useEffect(() => {
-    const getStyleKey = (direction: Direction): 'width' | 'height' => {
-      switch (direction) {
-        case 'horizontal':
-          return 'width';
-
-        case 'vertical':
-          return 'height';
-      }
-    };
     const flexMode = (moveDistance: number, direction: Direction) => {
       if (
         !gutterRef.current ||
@@ -73,6 +74,7 @@ const Gutter = ({
 
       const styleKey = getStyleKey(direction);
 
+      // replace flex to width
       if (previousSiblingInfoRef.current.element.style.flex) {
         previousSiblingInfoRef.current.element.style[styleKey] = `${
           previousSiblingInfoRef.current.element.getBoundingClientRect()[
@@ -120,11 +122,11 @@ const Gutter = ({
         currentPreviousSiblingSizePx > 0
       ) {
         const fixPreviousSizePx = 0;
-        const fixNextSizePx =
-          currentNextSiblingSizePx + currentPreviousSiblingSizePx;
         previousSiblingInfoRef.current.element.style[
           styleKey
         ] = `${fixPreviousSizePx}px`;
+        const fixNextSizePx =
+          currentNextSiblingSizePx + currentPreviousSiblingSizePx;
         nextSiblingInfoRef.current.element.style[
           styleKey
         ] = `${fixNextSizePx}px`;
@@ -137,10 +139,10 @@ const Gutter = ({
       ) {
         const fixPreviousSizePx =
           currentPreviousSiblingSizePx + currentNextSiblingSizePx;
-        const fixNextSizePx = 0;
         previousSiblingInfoRef.current.element.style[
-          styleKey
-        ] = `${fixPreviousSizePx}px`;
+            styleKey
+          ] = `${fixPreviousSizePx}px`;
+        const fixNextSizePx = 0;
         nextSiblingInfoRef.current.element.style[
           styleKey
         ] = `${fixNextSizePx}px`;
