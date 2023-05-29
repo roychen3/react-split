@@ -87,12 +87,12 @@ const Gutter = ({
         nextSiblingInfoRef.current.startRect[styleKey] - moveDistance;
 
       // set new size
-      if (newNextSiblingSizePx > 0) {
+      if (newNextSiblingSizePx >= 0) {
         previousSiblingInfoRef.current.element.style[
           styleKey
         ] = `${newPreviousSiblingSizePx}px`;
       }
-      if (newPreviousSiblingSizePx > 0) {
+      if (newPreviousSiblingSizePx >= 0) {
         nextSiblingInfoRef.current.element.style[
           styleKey
         ] = `${newNextSiblingSizePx}px`;
@@ -106,7 +106,7 @@ const Gutter = ({
       const currentNextSiblingSizePx =
         nextSiblingInfoRef.current.element.getBoundingClientRect()[styleKey];
       if (
-        newNextSiblingSizePx > 0 &&
+        newNextSiblingSizePx >= 0 &&
         newPreviousSiblingSizePx !== currentPreviousSiblingSizePx &&
         newPreviousSiblingSizePx <= 0 &&
         currentPreviousSiblingSizePx > 0
@@ -122,7 +122,7 @@ const Gutter = ({
         ] = `${fixNextSizePx}px`;
       }
       if (
-        newPreviousSiblingSizePx > 0 &&
+        newPreviousSiblingSizePx >= 0 &&
         newNextSiblingSizePx !== currentNextSiblingSizePx &&
         newNextSiblingSizePx <= 0 &&
         currentNextSiblingSizePx > 0
