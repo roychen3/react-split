@@ -8,6 +8,7 @@ export default function App() {
       <h1>Horizontal & Flex</h1>
       <div className="container container-horizontal">
         <Split
+        // itemSizes={[10, 20, 30, 60, 120]}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
         // }}
@@ -31,15 +32,16 @@ export default function App() {
       <div className="container container-horizontal">
         <Split
           flexContainer={false}
-          // onGutterDown={(event) => {
-          //   console.log('onGutterDown', event);
-          // }}
-          // onGutterMove={(event) => {
-          //   console.log('onGutterMove', event);
-          // }}
-          // onGutterUp={(event) => {
-          //   console.log('onGutterUp', event);
-          // }}
+        // itemSizes={[10, 20, 30, 60, 120]}
+        // onGutterDown={(event) => {
+        //   console.log('onGutterDown', event);
+        // }}
+        // onGutterMove={(event) => {
+        //   console.log('onGutterMove', event);
+        // }}
+        // onGutterUp={(event) => {
+        //   console.log('onGutterUp', event);
+        // }}
         >
           <div className="block">A Component</div>
           <div className="block">B Component</div>
@@ -54,15 +56,16 @@ export default function App() {
       <div className="container container-vertical">
         <Split
           direction="vertical"
-          // onGutterDown={(event) => {
-          //   console.log('onGutterDown', event);
-          // }}
-          // onGutterMove={(event) => {
-          //   console.log('onGutterMove', event);
-          // }}
-          // onGutterUp={(event) => {
-          //   console.log('onGutterUp', event);
-          // }}
+        // itemSizes={[10, 20, 30, 60, 120]}
+        // onGutterDown={(event) => {
+        //   console.log('onGutterDown', event);
+        // }}
+        // onGutterMove={(event) => {
+        //   console.log('onGutterMove', event);
+        // }}
+        // onGutterUp={(event) => {
+        //   console.log('onGutterUp', event);
+        // }}
         >
           <div className="block">A Component</div>
           <div className="block">B Component</div>
@@ -78,15 +81,16 @@ export default function App() {
         <Split
           direction="vertical"
           flexContainer={false}
-          // onGutterDown={(event) => {
-          //   console.log('onGutterDown', event);
-          // }}
-          // onGutterMove={(event) => {
-          //   console.log('onGutterMove', event);
-          // }}
-          // onGutterUp={(event) => {
-          //   console.log('onGutterUp', event);
-          // }}
+        // itemSizes={[10, 20, 30, 60, 120]}
+        // onGutterDown={(event) => {
+        //   console.log('onGutterDown', event);
+        // }}
+        // onGutterMove={(event) => {
+        //   console.log('onGutterMove', event);
+        // }}
+        // onGutterUp={(event) => {
+        //   console.log('onGutterUp', event);
+        // }}
         >
           <div className="block">A Component</div>
           <div className="block">B Component</div>

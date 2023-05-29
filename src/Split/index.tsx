@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import Gutter from './Gutter';
+import { getStyleKey } from './utils'
 import { SplitProps } from './types';
 
 import './styles.css';
@@ -8,6 +9,7 @@ const Split = ({
   children,
   direction = 'horizontal',
   flexContainer = true,
+  itemSizes = [],
   onGutterDown,
   onGutterMove,
   onGutterUp,
@@ -16,17 +18,20 @@ const Split = ({
   const renderChildren = () => {
     if (children instanceof Array) {
       return children.map((eachChild, idx) => {
+        const styleKey = getStyleKey(direction);
+        const size = itemSizes[idx];
         if (flexContainer && idx + 1 === children.length) {
-          return <div key={idx} className='split__item'>{eachChild}</div>;
+          return <div key={idx} className='split__item' style={{ [styleKey]: size }}>{eachChild}</div>;
         }
         return (
           <Fragment key={idx}>
-            <div className='split__item'>
+            <div className='split__item' style={{ [styleKey]: size }}>
               {eachChild}
             </div>
             <Gutter
               direction={direction}
               flexContainer={flexContainer}
+              itemSizes={itemSizes}
               onGutterDown={onGutterDown}
               onGutterMove={onGutterMove}
               onGutterUp={onGutterUp}

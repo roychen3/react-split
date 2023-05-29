@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { GutterProps, MousePosition, SiblingInfo, Direction } from './types';
+import { getStyleKey } from './utils';
 
 const defaultMousePosition: MousePosition = {
   x: 0,
@@ -10,19 +11,10 @@ const defaultSiblingElement: SiblingInfo = {
   element: null,
 };
 
-const getStyleKey = (direction: Direction): 'width' | 'height' => {
-  switch (direction) {
-    case 'horizontal':
-      return 'width';
-
-    case 'vertical':
-      return 'height';
-  }
-};
-
 const Gutter = ({
-  direction = 'horizontal',
-  flexContainer = true,
+  direction,
+  flexContainer,
+  itemSizes,
   onGutterDown,
   onGutterMove,
   onGutterUp,
@@ -76,17 +68,15 @@ const Gutter = ({
 
       // replace flex to width
       if (previousSiblingInfoRef.current.element.style.flex) {
-        previousSiblingInfoRef.current.element.style[styleKey] = `${
-          previousSiblingInfoRef.current.element.getBoundingClientRect()[
-            styleKey
-          ]
-        }px`;
+        previousSiblingInfoRef.current.element.style[styleKey] = `${previousSiblingInfoRef.current.element.getBoundingClientRect()[
+          styleKey
+        ]
+          }px`;
         previousSiblingInfoRef.current.element.style.flex = '';
       }
       if (nextSiblingInfoRef.current.element.style.flex) {
-        nextSiblingInfoRef.current.element.style[styleKey] = `${
-          nextSiblingInfoRef.current.element.getBoundingClientRect()[styleKey]
-        }px`;
+        nextSiblingInfoRef.current.element.style[styleKey] = `${nextSiblingInfoRef.current.element.getBoundingClientRect()[styleKey]
+          }px`;
         nextSiblingInfoRef.current.element.style.flex = '';
       }
 
@@ -111,7 +101,7 @@ const Gutter = ({
       // check size & fix size
       const currentPreviousSiblingSizePx =
         previousSiblingInfoRef.current.element.getBoundingClientRect()[
-          styleKey
+        styleKey
         ];
       const currentNextSiblingSizePx =
         nextSiblingInfoRef.current.element.getBoundingClientRect()[styleKey];
@@ -140,8 +130,8 @@ const Gutter = ({
         const fixPreviousSizePx =
           currentPreviousSiblingSizePx + currentNextSiblingSizePx;
         previousSiblingInfoRef.current.element.style[
-            styleKey
-          ] = `${fixPreviousSizePx}px`;
+          styleKey
+        ] = `${fixPreviousSizePx}px`;
         const fixNextSizePx = 0;
         nextSiblingInfoRef.current.element.style[
           styleKey
@@ -214,7 +204,7 @@ const Gutter = ({
 
   useEffect(() => {
     // if flexContainer, auto fill space
-    if (flexContainer && gutterRef.current instanceof HTMLElement) {
+    if (flexContainer && itemSizes.length === 0 && gutterRef.current instanceof HTMLElement) {
       if (gutterRef.current.previousElementSibling instanceof HTMLElement) {
         gutterRef.current.previousElementSibling.style.flex = '1';
       }
