@@ -12,8 +12,9 @@ const defaultSiblingElement: SiblingInfo = {
 };
 
 const Gutter = ({
-  direction,
-  flexContainer,
+  index,
+  direction = 'horizontal',
+  flexContainer = true,
   itemSizes,
   onGutterDown,
   onGutterMove,
@@ -203,12 +204,16 @@ const Gutter = ({
   }, [mouseDown]);
 
   useEffect(() => {
-    // if flexContainer, auto fill space
-    if (flexContainer && itemSizes.length === 0 && gutterRef.current instanceof HTMLElement) {
-      if (gutterRef.current.previousElementSibling instanceof HTMLElement) {
+    // if not set sizes & flexContainer, auto fill space
+    const numberSizes = typeof itemSizes === 'number'
+    if (!numberSizes && flexContainer && gutterRef.current instanceof HTMLElement) {
+      const arraySizes = itemSizes instanceof Array
+      const previousSize = arraySizes && itemSizes[index]
+      const nextSize = arraySizes && itemSizes[index + 1]
+      if (!previousSize && gutterRef.current.previousElementSibling instanceof HTMLElement) {
         gutterRef.current.previousElementSibling.style.flex = '1';
       }
-      if (gutterRef.current.nextElementSibling instanceof HTMLElement) {
+      if (!nextSize && gutterRef.current.nextElementSibling instanceof HTMLElement) {
         gutterRef.current.nextElementSibling.style.flex = '1';
       }
     }

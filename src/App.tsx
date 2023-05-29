@@ -8,6 +8,8 @@ export default function App() {
       <h1>Horizontal & Flex</h1>
       <div className="container container-horizontal">
         <Split
+        // itemSizes={120}
+        // itemSizes={[]}
         // itemSizes={[10, 20, 30, 60, 120]}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
@@ -32,6 +34,8 @@ export default function App() {
       <div className="container container-horizontal">
         <Split
           flexContainer={false}
+        // itemSizes={120}
+        // itemSizes={[]}
         // itemSizes={[10, 20, 30, 60, 120]}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
@@ -56,6 +60,8 @@ export default function App() {
       <div className="container container-vertical">
         <Split
           direction="vertical"
+        // itemSizes={120}
+        // itemSizes={[]}
         // itemSizes={[10, 20, 30, 60, 120]}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
@@ -81,6 +87,8 @@ export default function App() {
         <Split
           direction="vertical"
           flexContainer={false}
+        // itemSizes={120}
+        // itemSizes={[]}
         // itemSizes={[10, 20, 30, 60, 120]}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);

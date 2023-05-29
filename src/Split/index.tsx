@@ -19,7 +19,7 @@ const Split = ({
     if (children instanceof Array) {
       return children.map((eachChild, idx) => {
         const styleKey = getStyleKey(direction);
-        const size = itemSizes[idx];
+        const size = itemSizes instanceof Array ? itemSizes[idx] : itemSizes;
         if (flexContainer && idx + 1 === children.length) {
           return <div key={idx} className='split__item' style={{ [styleKey]: size }}>{eachChild}</div>;
         }
@@ -29,6 +29,7 @@ const Split = ({
               {eachChild}
             </div>
             <Gutter
+              index={idx}
               direction={direction}
               flexContainer={flexContainer}
               itemSizes={itemSizes}
