@@ -17,11 +17,13 @@ const Split = ({
     if (children instanceof Array) {
       return children.map((eachChild, idx) => {
         if (flexContainer && idx + 1 === children.length) {
-          return <Fragment key={idx}>{eachChild}</Fragment>;
+          return <div key={idx} className='split__item'>{eachChild}</div>;
         }
         return (
           <Fragment key={idx}>
-            {eachChild}
+            <div className='split__item'>
+              {eachChild}
+            </div>
             <Gutter
               direction={direction}
               flexContainer={flexContainer}

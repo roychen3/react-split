@@ -3,6 +3,11 @@
   padding: 0 2rem;
 }
 
+/* ====== custom split ====== */
+.split__item{
+  background-color:yellow;
+}
+
 /* ================ */
 
 .container {
@@ -20,4 +25,11 @@
 
 .block {
   background-color: aqua;
+
+  /* try it */
+  /* margin: 1rem; */
+  /* padding: 1rem; */
+
+  /* let block fill container */
+  /* height: 100%; */
 }

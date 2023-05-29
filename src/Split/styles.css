@@ -16,6 +16,9 @@
   overflow-y: hidden;
 }
 
+.split__item {
+  overflow: hidden;
+}
 
 /* gutter styles */
 .gutter {
