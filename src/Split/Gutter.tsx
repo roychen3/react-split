@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { GutterProps, MousePosition, SiblingInfo, Direction } from './types';
-import { getStyleKey } from './utils';
+import { getStyleKey, getSiblingSize, formatSize } from './utils';
 
 const defaultMousePosition: MousePosition = {
   x: 0,
@@ -15,6 +15,7 @@ const Gutter = ({
   index,
   direction = 'horizontal',
   flexContainer = true,
+  minItemSizes,
   itemSizes,
   onGutterDown,
   onGutterMove,
@@ -88,13 +89,16 @@ const Gutter = ({
       const newNextSiblingSizePx =
         nextSiblingInfoRef.current.startRect[styleKey] - moveDistance;
 
+      const siblingMinSize = getSiblingSize(minItemSizes ?? [], index)
+      const previousMinSize = siblingMinSize[0] ?? 0;
+      const nexMinSize = siblingMinSize[1] ?? 0;
+
       // set new size
-      if (newNextSiblingSizePx >= 0) {
+      if (newPreviousSiblingSizePx >= previousMinSize && newNextSiblingSizePx >= nexMinSize) {
         previousSiblingInfoRef.current.element.style[
           styleKey
         ] = `${newPreviousSiblingSizePx}px`;
-      }
-      if (newPreviousSiblingSizePx >= 0) {
+
         nextSiblingInfoRef.current.element.style[
           styleKey
         ] = `${newNextSiblingSizePx}px`;
@@ -108,33 +112,33 @@ const Gutter = ({
       const currentNextSiblingSizePx =
         nextSiblingInfoRef.current.element.getBoundingClientRect()[styleKey];
       if (
-        newNextSiblingSizePx >= 0 &&
+        newNextSiblingSizePx >= nexMinSize &&
         newPreviousSiblingSizePx !== currentPreviousSiblingSizePx &&
-        newPreviousSiblingSizePx <= 0 &&
-        currentPreviousSiblingSizePx > 0
+        newPreviousSiblingSizePx <= previousMinSize &&
+        currentPreviousSiblingSizePx > previousMinSize
       ) {
-        const fixPreviousSizePx = 0;
+        const fixPreviousSizePx = previousMinSize;
         previousSiblingInfoRef.current.element.style[
           styleKey
         ] = `${fixPreviousSizePx}px`;
         const fixNextSizePx =
-          currentNextSiblingSizePx + currentPreviousSiblingSizePx;
+          currentNextSiblingSizePx + currentPreviousSiblingSizePx - previousMinSize;
         nextSiblingInfoRef.current.element.style[
           styleKey
         ] = `${fixNextSizePx}px`;
       }
       if (
-        newPreviousSiblingSizePx >= 0 &&
+        newPreviousSiblingSizePx >= previousMinSize &&
         newNextSiblingSizePx !== currentNextSiblingSizePx &&
-        newNextSiblingSizePx <= 0 &&
-        currentNextSiblingSizePx > 0
+        newNextSiblingSizePx <= nexMinSize &&
+        currentNextSiblingSizePx > nexMinSize
       ) {
         const fixPreviousSizePx =
-          currentPreviousSiblingSizePx + currentNextSiblingSizePx;
+          currentPreviousSiblingSizePx + currentNextSiblingSizePx - nexMinSize;
         previousSiblingInfoRef.current.element.style[
           styleKey
         ] = `${fixPreviousSizePx}px`;
-        const fixNextSizePx = 0;
+        const fixNextSizePx = nexMinSize;
         nextSiblingInfoRef.current.element.style[
           styleKey
         ] = `${fixNextSizePx}px`;
@@ -152,17 +156,20 @@ const Gutter = ({
       const styleKey = getStyleKey(direction);
       const newPreviousSiblingSizePx =
         previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
-      const positive = newPreviousSiblingSizePx > 0;
-      const zeroSize =
-        previousSiblingInfoRef.current.element.style[styleKey] === '0px';
+      const siblingMinSize = getSiblingSize(minItemSizes ?? [], index)
+      const previousMinSize = siblingMinSize[0] ?? 0;
+      const biggerMinSize = newPreviousSiblingSizePx > previousMinSize;
 
-      if (zeroSize || positive) {
+      const equalMinSize =
+        previousSiblingInfoRef.current.element.getBoundingClientRect()[styleKey] === previousMinSize;
+
+      if (equalMinSize || biggerMinSize) {
         previousSiblingInfoRef.current.element.style[
           styleKey
         ] = `${newPreviousSiblingSizePx}px`;
       }
-      if (!positive) {
-        previousSiblingInfoRef.current.element.style[styleKey] = '0';
+      if (!biggerMinSize) {
+        previousSiblingInfoRef.current.element.style[styleKey] = `${previousMinSize}px`;
       }
     };
     const onMouseMove = (event: MouseEvent) => {
@@ -205,20 +212,36 @@ const Gutter = ({
   }, [mouseDown]);
 
   useEffect(() => {
-    // if not set sizes & flexContainer, auto fill space
-    const numberSizes = typeof itemSizes === 'number'
-    if (!numberSizes && flexContainer && gutterRef.current instanceof HTMLElement) {
-      const arraySizes = itemSizes instanceof Array
-      const previousSize = arraySizes && itemSizes[index]
-      const nextSize = arraySizes && itemSizes[index + 1]
-      if (!previousSize && gutterRef.current.previousElementSibling instanceof HTMLElement) {
-        gutterRef.current.previousElementSibling.style.flex = '1';
+    if (gutterRef.current instanceof HTMLElement) {
+      const [defaultMinPreviousSize, defaultMinNextSize] = getSiblingSize(minItemSizes ?? [], index);
+      const [defaultPreviousSize, defaultNextSize] = getSiblingSize(itemSizes ?? [], index);
+      const previousSize = formatSize(defaultMinPreviousSize, defaultPreviousSize)
+      const nextSize = formatSize(defaultMinNextSize, defaultNextSize)
+      const styleKey = getStyleKey(direction);
+
+      if (gutterRef.current.previousElementSibling instanceof HTMLElement) {
+        const previousElementSibling = gutterRef.current.previousElementSibling
+        if (typeof previousSize === 'number') {
+          // set default size
+          previousElementSibling.style[styleKey] = `${previousSize}px`
+        } else if (flexContainer) {
+          // else if flexContainer, auto fill space
+          previousElementSibling.style.flex = '1';
+        }
       }
-      if (!nextSize && gutterRef.current.nextElementSibling instanceof HTMLElement) {
-        gutterRef.current.nextElementSibling.style.flex = '1';
+
+      if (gutterRef.current.nextElementSibling instanceof HTMLElement) {
+        const nextElementSibling = gutterRef.current.nextElementSibling
+        if (typeof nextSize === 'number') {
+          // set default size
+          nextElementSibling.style[styleKey] = `${nextSize}px`
+        } else if (flexContainer) {
+          // else if flexContainer, auto fill space
+          nextElementSibling.style.flex = '1';
+        }
       }
     }
-  }, [flexContainer]);
+  }, [direction, minItemSizes, itemSizes, flexContainer]);
 
   const getGutterClassName = () => {
     let className = 'gutter';

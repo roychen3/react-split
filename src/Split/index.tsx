@@ -9,7 +9,8 @@ const Split = ({
   children,
   direction = 'horizontal',
   flexContainer = true,
-  itemSizes = [],
+  minItemSizes,
+  itemSizes,
   gutterStyle,
   onGutterDown,
   onGutterMove,
@@ -19,14 +20,12 @@ const Split = ({
   const renderChildren = () => {
     if (children instanceof Array) {
       return children.map((eachChild, idx) => {
-        const styleKey = getStyleKey(direction);
-        const size = itemSizes instanceof Array ? itemSizes[idx] : itemSizes;
         if (flexContainer && idx + 1 === children.length) {
-          return <div key={idx} className='split__item' style={{ [styleKey]: size }}>{eachChild}</div>;
+          return <div key={idx} className='split__item'>{eachChild}</div>;
         }
         return (
           <Fragment key={idx}>
-            <div className='split__item' style={{ [styleKey]: size }}>
+            <div className='split__item'>
               {eachChild}
             </div>
             <Gutter
@@ -34,6 +33,7 @@ const Split = ({
               style={gutterStyle}
               direction={direction}
               flexContainer={flexContainer}
+              minItemSizes={minItemSizes}
               itemSizes={itemSizes}
               onGutterDown={onGutterDown}
               onGutterMove={onGutterMove}

@@ -18,6 +18,7 @@ export interface GutterProps extends GutterHTMLProps {
   index: number;
   direction?: Direction;
   flexContainer?: boolean;
+  minItemSizes?: number | number[];
   itemSizes?: number | number[];
   onGutterDown?: (event: MouseEvent) => void;
   onGutterMove?: (event: MouseEvent) => void;
@@ -28,6 +29,7 @@ export interface SplitProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
   direction?: Direction;
   flexContainer?: boolean;
+  minItemSizes?: number | number[];
   itemSizes?: number | number[];
   gutterStyle?: React.CSSProperties;
   onGutterDown?: (event: MouseEvent) => void;
