@@ -224,6 +224,7 @@ const Gutter = ({
         if (typeof previousSize === 'number') {
           // set default size
           previousElementSibling.style[styleKey] = `${previousSize}px`
+          previousElementSibling.style.flex = '';
         } else if (flexContainer) {
           // else if flexContainer, auto fill space
           previousElementSibling.style.flex = '1';
@@ -235,6 +236,7 @@ const Gutter = ({
         if (typeof nextSize === 'number') {
           // set default size
           nextElementSibling.style[styleKey] = `${nextSize}px`
+          nextElementSibling.style.flex = '';
         } else if (flexContainer) {
           // else if flexContainer, auto fill space
           nextElementSibling.style.flex = '1';
