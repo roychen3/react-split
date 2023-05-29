@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
 import Gutter from './Gutter';
-import { getStyleKey } from './utils'
 import { SplitProps } from './types';
 
 import './styles.css';
@@ -35,9 +34,9 @@ const Split = ({
               flexContainer={flexContainer}
               minItemSizes={minItemSizes}
               itemSizes={itemSizes}
-              onGutterDown={onGutterDown}
-              onGutterMove={onGutterMove}
-              onGutterUp={onGutterUp}
+              // onGutterDown={onGutterDown}
+              // onGutterMove={onGutterMove}
+              // onGutterUp={onGutterUp}
             />
           </Fragment>
         );

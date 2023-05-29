@@ -10,12 +10,14 @@ export default function App() {
     <div className="App">
       <h3>set item size</h3>
       <button onClick={() => { setItemSizes(30) }}>set all item size to 30</button>
+      <button onClick={() => { setItemSizes(200) }}>set all item size to 200</button>
       <button onClick={() => { setItemSizes([10, 20, 30, 60, 120]) }}>set all item size to [10, 20, 30, 60, 120]</button>
       <button onClick={() => { setItemSizes([120, 60, 30, 20, 10]) }}>set all item size to [120, 60, 30, 20, 10]</button>
       <button onClick={() => { setItemSizes([]) }}>set all item size to []</button>
 
       <h3>set min item size</h3>
       <button onClick={() => { setMinItemSizes(30) }}>set all item min size to 30</button>
+      <button onClick={() => { setMinItemSizes(200) }}>set all item min size to 200</button>
       <button onClick={() => { setMinItemSizes([10, 20, 30, 60, 120]) }}>set all item min size to [10, 20, 30, 60, 120]</button>
       <button onClick={() => { setMinItemSizes([120, 60, 30, 20, 10]) }}>set all item min size to [120, 60, 30, 20, 10]</button>
       <button onClick={() => { setMinItemSizes([]) }}>set all item min size to []</button>
@@ -23,20 +25,14 @@ export default function App() {
       <h1>Horizontal & Flex</h1>
       <div className="container container-horizontal">
         <Split
-          // minItemSizes={30}
-          // minItemSizes={[]}
-          // minItemSizes={[120, 60, 30, 20, 10]}
           minItemSizes={minItemSizes}
-          // itemSizes={120}
-          // itemSizes={[]}
-          // itemSizes={[10, 20, 30, 60, 120]}
           itemSizes={itemSizes}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
         // }}
-        // onGutterMove={(event) => {
-        //   console.log('onGutterMove', event);
-        // }}
+        onGutterMove={(event) => {
+          console.log('onGutterMove', event);
+        }}
         // onGutterUp={(event) => {
         //   console.log('onGutterUp', event);
         // }}
@@ -54,20 +50,14 @@ export default function App() {
       <div className="container container-horizontal">
         <Split
           flexContainer={false}
-          // minItemSizes={30}
-          // minItemSizes={[]}
-          // minItemSizes={[120, 60, 30, 20, 10]}
           minItemSizes={minItemSizes}
-          // itemSizes={120}
-          // itemSizes={[]}
-          // itemSizes={[10, 20, 30, 60, 120]}
           itemSizes={itemSizes}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
         // }}
-        // onGutterMove={(event) => {
-        //   console.log('onGutterMove', event);
-        // }}
+        onGutterMove={(event) => {
+          console.log('onGutterMove', event);
+        }}
         // onGutterUp={(event) => {
         //   console.log('onGutterUp', event);
         // }}
@@ -85,20 +75,14 @@ export default function App() {
       <div className="container container-vertical">
         <Split
           direction="vertical"
-          // minItemSizes={30}
-          // minItemSizes={[]}
-          // minItemSizes={[120, 60, 30, 20, 10]}
           minItemSizes={minItemSizes}
-          // itemSizes={120}
-          // itemSizes={[]}
-          // itemSizes={[10, 20, 30, 60, 120]}
           itemSizes={itemSizes}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
         // }}
-        // onGutterMove={(event) => {
-        //   console.log('onGutterMove', event);
-        // }}
+        onGutterMove={(event) => {
+          console.log('onGutterMove', event);
+        }}
         // onGutterUp={(event) => {
         //   console.log('onGutterUp', event);
         // }}
@@ -117,20 +101,14 @@ export default function App() {
         <Split
           direction="vertical"
           flexContainer={false}
-          // minItemSizes={30}
-          // minItemSizes={[]}
-          // minItemSizes={[120, 60, 30, 20, 10]}
           minItemSizes={minItemSizes}
-          // itemSizes={120}
-          // itemSizes={[]}
-          // itemSizes={[10, 20, 30, 60, 120]}
           itemSizes={itemSizes}
         // onGutterDown={(event) => {
         //   console.log('onGutterDown', event);
         // }}
-        // onGutterMove={(event) => {
-        //   console.log('onGutterMove', event);
-        // }}
+        onGutterMove={(event) => {
+          console.log('onGutterMove', event);
+        }}
         // onGutterUp={(event) => {
         //   console.log('onGutterUp', event);
         // }}
