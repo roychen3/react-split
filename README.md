@@ -27,7 +27,9 @@ function Component() {
       children      // ReactNode
       direction     // 'horizontal' | 'vertical' | undefined
       flexContainer // boolean | undefined
+      minItemSizes  // number | number[] | undefined
       itemSizes     // number | number[] | undefined
+      gutterStyle   // React.CSSProperties | undefined
       onGutterDown  // (event: MouseEvent) => void | undefined
       onGutterMove  // (event: MouseEvent) => void | undefined
       onGutterUp    // (event: MouseEvent) => void | undefined
