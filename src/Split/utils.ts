@@ -1,5 +1,7 @@
 import { Direction, ItemSizes } from './types'
 
+export const isNumber = (value: any): value is number => typeof value === 'number'
+
 export const getStyleKey = (direction: Direction): 'width' | 'height' => {
   switch (direction) {
     case 'horizontal':
@@ -11,14 +13,12 @@ export const getStyleKey = (direction: Direction): 'width' | 'height' => {
 };
 
 export const getSiblingSizes = (sizes: number | number[], idx?: number): number[] | null[] => {
-  const numberSizes = typeof sizes === 'number'
-  if (numberSizes) {
+  if (isNumber(sizes)) {
     return [sizes, sizes]
   }
 
   const arraySizes = sizes instanceof Array
-  const numberIdx = typeof idx === 'number'
-  if (arraySizes && numberIdx) {
+  if (arraySizes && isNumber(idx)) {
     const previousSize = sizes[idx] ?? null
     const nextSize = sizes[idx + 1] ?? null
 
@@ -28,27 +28,28 @@ export const getSiblingSizes = (sizes: number | number[], idx?: number): number[
   return [null, null]
 }
 
-export const formatSize = (minSize: number | null, size: number | null): number | null => {
-  const isMinSizeNumber = typeof minSize === 'number'
-  const isSizeNumber = typeof size === 'number'
-  if (isMinSizeNumber && !isSizeNumber) {
-    return null
-  }
-  if (!isMinSizeNumber && isSizeNumber) {
-    return size
-  }
-  if (isMinSizeNumber && isSizeNumber) {
+export const checkSizeRange = (minSize: number | null, size: number | null): number | null => {
+  if (isNumber(minSize) && isNumber(size)) {
     return Math.max(minSize, size)
+  }
+  if (!isNumber(minSize) && isNumber(size)) {
+    return size
   }
   return null
 }
 
 export const formatItemSizes = (itemSizes: ItemSizes, length?: number): number[] => {
-  if (typeof itemSizes === 'number' && length) {
+  if (isNumber(itemSizes) && length) {
     return Array.from({ length: length }, () => itemSizes)
   }
   if (itemSizes instanceof Array) {
     return itemSizes
   }
   return []
+}
+
+export const pxToPercent = (numerator: number, denominator: number): number => {
+  if (numerator === 0) return 0
+  if (denominator === 0) throw Error('denominator not to be "0"')
+  return numerator / denominator * 100
 }

@@ -4,19 +4,28 @@ import Split from './Split';
 import './styles.css';
 
 export default function App() {
-  const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<number | number[]>([])
-  const [horizontalFlexItemSizes, setHorizontalFlexItemSizes] = useState<number | number[]>([])
+  const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<number | number[]>()
+  const [horizontalFlexItemSizes, setHorizontalFlexItemSizes] = useState<number | number[]>()
 
-  const [minHorizontalFixedItemSizes, setHorizontalFixedMinItemSizes] = useState<number | number[]>([])
-  const [horizontalFixedItemSizes, setHorizontalFixedItemSizes] = useState<number | number[]>([])
+  const [minHorizontalFixedItemSizes, setHorizontalFixedMinItemSizes] = useState<number | number[]>()
+  const [horizontalFixedItemSizes, setHorizontalFixedItemSizes] = useState<number | number[]>()
 
-  const [minVerticalFlexItemSizes, setVerticalFlexMinItemSizes] = useState<number | number[]>([])
-  const [verticalFlexItemSizes, setVerticalFlexItemSizes] = useState<number | number[]>([])
+  const [minVerticalFlexItemSizes, setVerticalFlexMinItemSizes] = useState<number | number[]>()
+  const [verticalFlexItemSizes, setVerticalFlexItemSizes] = useState<number | number[]>()
 
-  const [minVerticalFixedItemSizes, setVerticalFixedMinItemSizes] = useState<number | number[]>([])
-  const [verticalFixedItemSizes, setVerticalFixedItemSizes] = useState<number | number[]>([])
+  const [minVerticalFixedItemSizes, setVerticalFixedMinItemSizes] = useState<number | number[]>()
+  const [verticalFixedItemSizes, setVerticalFixedItemSizes] = useState<number | number[]>()
   return (
     <div className="App">
+      <h1>Basic</h1>
+      <div className="container container-horizontal">
+        <Split>
+          <div className="block">A Component</div>
+          <div className="block">B Component</div>
+        </Split>
+      </div>
+      <br />
+
       <h3>set min item size</h3>
       <div>
         <button onClick={() => {
@@ -120,15 +129,15 @@ export default function App() {
         <Split
           minItemSizes={minHorizontalFlexItemSizes}
           itemSizes={horizontalFlexItemSizes}
-          // onGutterDown={(event) => {
-          //   console.log('onGutterDown', event);
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
-            // console.log('onGutterMove');
+            // console.log('onGutterMove', newItemSizes);
             setHorizontalFlexItemSizes(newItemSizes)
           }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
@@ -146,15 +155,15 @@ export default function App() {
           flexContainer={false}
           minItemSizes={minHorizontalFixedItemSizes}
           itemSizes={horizontalFixedItemSizes}
-          // onGutterDown={(event) => {
-          //   console.log('onGutterDown', event);
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
-            // console.log('onGutterMove');
+            // console.log('onGutterMove', newItemSizes);
             setHorizontalFixedItemSizes(newItemSizes)
           }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
@@ -172,15 +181,15 @@ export default function App() {
           direction="vertical"
           minItemSizes={minVerticalFlexItemSizes}
           itemSizes={verticalFlexItemSizes}
-          // onGutterDown={(event) => {
-          //   console.log('onGutterDown', event);
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
-            // console.log('onGutterMove');
+            // console.log('onGutterMove', newItemSizes);
             setVerticalFlexItemSizes(newItemSizes)
           }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
@@ -199,15 +208,15 @@ export default function App() {
           flexContainer={false}
           minItemSizes={minVerticalFixedItemSizes}
           itemSizes={verticalFixedItemSizes}
-          // onGutterDown={(event) => {
-          //   console.log('onGutterDown', event);
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
-            // console.log('onGutterMove');
+            // console.log('onGutterMove', newItemSizes);
             setVerticalFixedItemSizes(newItemSizes)
           }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
