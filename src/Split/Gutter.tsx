@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { GutterProps, MousePosition, SiblingInfo, Direction } from './types';
-import { getStyleKey, getSiblingSize } from './utils';
+import { getStyleKey, getSiblingSizes } from './utils';
 
 const defaultMousePosition: MousePosition = {
   x: 0,
@@ -57,30 +57,12 @@ const Gutter = ({
       if (
         !gutterRef.current ||
         !gutterRef.current.parentElement ||
-        !(gutterRef.current.previousSibling instanceof HTMLElement) ||
-        !(gutterRef.current.nextSibling instanceof HTMLElement) ||
         !previousSiblingInfoRef.current.startRect ||
         !nextSiblingInfoRef.current.startRect
       )
         return;
 
       const styleKey = getStyleKey(direction);
-      const previousSiblingElement = gutterRef.current.previousSibling
-      const nextSiblingElement = gutterRef.current.nextSibling
-
-      // replace flex to width
-      if (previousSiblingElement.style.flex) {
-        previousSiblingElement.style[styleKey] = `${previousSiblingElement.getBoundingClientRect()[
-          styleKey
-        ]
-          }px`;
-        previousSiblingElement.style.flex = '';
-      }
-      if (nextSiblingElement.style.flex) {
-        nextSiblingElement.style[styleKey] = `${nextSiblingElement.getBoundingClientRect()[styleKey]
-          }px`;
-        nextSiblingElement.style.flex = '';
-      }
 
       // calculate new size
       const newPreviousSiblingSizePx =
@@ -88,39 +70,34 @@ const Gutter = ({
       const newNextSiblingSizePx =
         nextSiblingInfoRef.current.startRect[styleKey] - moveDistance;
 
-      const siblingMinSize = getSiblingSize(minItemSizes ?? [], index)
-      const previousMinSize = siblingMinSize[0] ?? 0;
-      const nexMinSize = siblingMinSize[1] ?? 0;
+      const siblingMinSizes = getSiblingSizes(minItemSizes ?? [], index)
+      const previousMinSize = siblingMinSizes[0] ?? 0;
+      const nexMinSize = siblingMinSizes[1] ?? 0;
 
       // set new size
-      if (newPreviousSiblingSizePx >= previousMinSize && newNextSiblingSizePx >= nexMinSize) {
+      const newPreviousSizeBiggerMinSize = newPreviousSiblingSizePx >= previousMinSize
+      const newNextSizeBiggerMinSize = newNextSiblingSizePx >= nexMinSize
+      if (newPreviousSizeBiggerMinSize && newNextSizeBiggerMinSize) {
         callback([newPreviousSiblingSizePx, newNextSiblingSizePx], moveDistance);
       }
 
-      // check size & fix size
-      const currentPreviousSiblingSizePx =
-        previousSiblingElement.getBoundingClientRect()[
-        styleKey
-        ];
-      const currentNextSiblingSizePx =
-        nextSiblingElement.getBoundingClientRect()[styleKey];
-      if (
-        newNextSiblingSizePx >= nexMinSize &&
-        newPreviousSiblingSizePx !== currentPreviousSiblingSizePx &&
+      // fix size
+      const currentSiblingSizes = getSiblingSizes(itemSizes, index)
+      const currentPreviousSiblingSizePx = currentSiblingSizes[0] ?? 0;
+      const currentNextSiblingSizePx = currentSiblingSizes[1] ?? 0;
+      const needFixPreviousSizePx = (newPreviousSiblingSizePx !== currentPreviousSiblingSizePx &&
         newPreviousSiblingSizePx <= previousMinSize &&
-        currentPreviousSiblingSizePx > previousMinSize
-      ) {
+        currentPreviousSiblingSizePx > previousMinSize);
+      if (needFixPreviousSizePx) {
         const fixPreviousSizePx = previousMinSize;
         const fixNextSizePx =
           currentNextSiblingSizePx + currentPreviousSiblingSizePx - previousMinSize;
         callback([fixPreviousSizePx, fixNextSizePx], moveDistance);
       }
-      if (
-        newPreviousSiblingSizePx >= previousMinSize &&
-        newNextSiblingSizePx !== currentNextSiblingSizePx &&
+      const needFixNextSizePx = (newNextSiblingSizePx !== currentNextSiblingSizePx &&
         newNextSiblingSizePx <= nexMinSize &&
-        currentNextSiblingSizePx > nexMinSize
-      ) {
+        currentNextSiblingSizePx > nexMinSize);
+      if (needFixNextSizePx) {
         const fixPreviousSizePx =
           currentPreviousSiblingSizePx + currentNextSiblingSizePx - nexMinSize;
         const fixNextSizePx = nexMinSize;
@@ -139,7 +116,7 @@ const Gutter = ({
       const styleKey = getStyleKey(direction);
       const newPreviousSiblingSizePx =
         previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
-      const siblingMinSize = getSiblingSize(minItemSizes ?? [], index)
+      const siblingMinSize = getSiblingSizes(minItemSizes, index)
       const previousMinSize = siblingMinSize[0] ?? 0;
       const newSizeBiggerMinSize = newPreviousSiblingSizePx > previousMinSize;
       const currentPreviousSiblingSizePx = gutterRef.current.previousSibling.getBoundingClientRect()[styleKey]
@@ -191,7 +168,7 @@ const Gutter = ({
         document.removeEventListener('mouseup', onMouseUp);
       }
     };
-  }, [mouseDown]);
+  }, [mouseDown, direction, minItemSizes, itemSizes]);
 
   const getGutterClassName = () => {
     let className = 'gutter';
