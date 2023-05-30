@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, Fragment } from 'react';
 import Gutter from './Gutter';
 import { SplitProps } from './types';
-import { formatItemSizes, checkSizeRange, getStyleKey, isNumber } from './utils'
+import { formatItemSizes, checkSizeRange, getStyleKey, isNumber, pixelToPercent } from './utils'
 import './styles.css';
 
 const Split = ({
@@ -9,7 +9,7 @@ const Split = ({
   direction = 'horizontal',
   flexContainer = true,
   minItemSizes: outsideMinItemSizes = [],
-  itemSizes: outsideItemSizes = [],
+  itemSizes: outsideItemSizes,
   gutterStyle,
   onGutterDown,
   onGutterMove,
@@ -38,32 +38,71 @@ const Split = ({
 
 
   if (children instanceof Array) {
-    const splitRef = useRef<HTMLDivElement>(null);
     const minItemSizes = formatItemSizes(outsideMinItemSizes, children.length);
-    const formattedOutsideItemSizes = formatItemSizes(outsideItemSizes, children.length);
+    const formattedOutsideItemSizes = outsideItemSizes ? formatItemSizes(outsideItemSizes, children.length) : [];
     const [innerItemSizes, setInnerItemSizes] = useState<number[]>(formattedOutsideItemSizes);
-    const itemSizes = formattedOutsideItemSizes.length >= innerItemSizes.length ? formattedOutsideItemSizes : innerItemSizes
+    const [itemSizesPercent, setInnerItemSizesPercent] = useState<number[]>([]);
+    const itemSizes = outsideItemSizes ? formattedOutsideItemSizes : innerItemSizes
     const styleKey = getStyleKey(direction);
+    const splitRef = useRef<HTMLDivElement>(null);
+    const [splitSizePx, setSplitSizePx] = useState(0)
 
     // set mount size
     useEffect(() => {
       if (splitRef.current) {
-        const splitItemElements = splitRef.current.querySelectorAll('.split__item')
-        const splitItemRects = Array.from(splitItemElements).map((splitItemElement) => {
-          return splitItemElement.getBoundingClientRect()
-        })
-        const defaultItemSizes = splitItemRects.map((rect) => rect[styleKey])
-        setInnerItemSizes(defaultItemSizes)
+        if (!outsideItemSizes) {
+          const splitItemElements = splitRef.current.querySelectorAll('.split__item')
+          splitItemElements.forEach((splitItemElement) => {
+            if (splitItemElement instanceof HTMLElement) {
+              splitItemElement.style.flex = '1'
+            }
+          })
+          const splitItemRects = Array.from(splitItemElements).map((splitItemElement) => {
+            return splitItemElement.getBoundingClientRect()
+          })
+          splitItemElements.forEach((splitItemElement) => {
+            if (splitItemElement instanceof HTMLElement) {
+              splitItemElement.style.flex = ''
+            }
+          })
+          const defaultItemSizes = splitItemRects.map((rect) => rect[styleKey])
+          setInnerItemSizes(defaultItemSizes)
+        }
+
+        const splitElementSize = splitRef.current.getBoundingClientRect()[styleKey]
+        setSplitSizePx(splitElementSize)
+      }
+    }, [outsideItemSizes])
+
+    useEffect(() => {
+      const onResize = () => {
+        if (splitRef.current) {
+          const splitElementSizePx = splitRef.current.getBoundingClientRect()[styleKey];
+          setSplitSizePx(splitElementSizePx);
+        }
+      }
+      window.addEventListener('resize', onResize)
+      return () => {
+        window.removeEventListener('resize', onResize)
       }
     }, [])
+
+    useEffect(() => {
+      if (splitSizePx) {
+        const percentSizes = itemSizes.map((itemSize) => pixelToPercent(itemSize, splitSizePx))
+        console.log('percentSizes', percentSizes)
+        setInnerItemSizesPercent(percentSizes)
+      }
+    }, [itemSizes])
 
     return (
       <div {...props} ref={splitRef} className={`${splitClassName}${props.className ? ` ${props.className}` : ''}`}>
         {children.map((eachChild, childIdx) => {
-          const renderSize = checkSizeRange(minItemSizes[childIdx], itemSizes[childIdx]);
+          const checkedSize = checkSizeRange(minItemSizes[childIdx], itemSizes[childIdx]);
+          const renderSize = flexContainer ? `${itemSizesPercent[childIdx]}%` : `${checkedSize}px`;
           const splitItemStyle = {
-            [styleKey]: isNumber(renderSize) ? `${renderSize}px` : undefined,
-            flex: isNumber(renderSize) ? undefined : '1'
+            // [styleKey]: checkedSize,
+            [styleKey]: renderSize,
           }
 
           if (flexContainer && childIdx + 1 === children.length) {
