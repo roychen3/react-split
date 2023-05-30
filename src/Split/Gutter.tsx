@@ -53,10 +53,13 @@ const Gutter = ({
   };
 
   useEffect(() => {
-    const flexMode = (moveDistance: number, direction: Direction, callback: (siblingItemSizes: number[], moveDistance: number) => void) => {
+    const flexMode = (
+      moveDistance: number,
+      direction: Direction,
+      callback: (siblingItemSizes: number[], moveDistance: number) => void
+    ) => {
       if (
         !gutterRef.current ||
-        !gutterRef.current.parentElement ||
         !previousSiblingInfoRef.current.startRect ||
         !nextSiblingInfoRef.current.startRect
       )
@@ -65,46 +68,58 @@ const Gutter = ({
       const styleKey = getStyleKey(direction);
 
       // calculate new size
-      const newPreviousSiblingSizePx =
+      const newPreviousSiblingPxSize =
         previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
-      const newNextSiblingSizePx =
+      const newNextSiblingPxSize =
         nextSiblingInfoRef.current.startRect[styleKey] - moveDistance;
 
-      const siblingMinSizes = getSiblingSizes(minItemSizes ?? [], index)
+      const siblingMinSizes = getSiblingSizes(minItemSizes ?? [], index);
       const previousMinSize = siblingMinSizes[0] ?? 0;
       const nexMinSize = siblingMinSizes[1] ?? 0;
 
       // set new size
-      const newPreviousSizeBiggerMinSize = newPreviousSiblingSizePx >= previousMinSize
-      const newNextSizeBiggerMinSize = newNextSiblingSizePx >= nexMinSize
+      const newPreviousSizeBiggerMinSize =
+        newPreviousSiblingPxSize >= previousMinSize;
+      const newNextSizeBiggerMinSize = newNextSiblingPxSize >= nexMinSize;
       if (newPreviousSizeBiggerMinSize && newNextSizeBiggerMinSize) {
-        callback([newPreviousSiblingSizePx, newNextSiblingSizePx], moveDistance);
+        callback(
+          [newPreviousSiblingPxSize, newNextSiblingPxSize],
+          moveDistance
+        );
       }
 
       // fix size
-      const currentSiblingSizes = getSiblingSizes(itemSizes, index)
-      const currentPreviousSiblingSizePx = currentSiblingSizes[0] ?? 0;
-      const currentNextSiblingSizePx = currentSiblingSizes[1] ?? 0;
-      const needFixPreviousSizePx = (newPreviousSiblingSizePx !== currentPreviousSiblingSizePx &&
-        newPreviousSiblingSizePx <= previousMinSize &&
-        currentPreviousSiblingSizePx > previousMinSize);
-      if (needFixPreviousSizePx) {
+      const currentSiblingSizes = getSiblingSizes(itemSizes, index);
+      const currentPreviousSiblingPxSize = currentSiblingSizes[0] ?? 0;
+      const currentNextSiblingPxSize = currentSiblingSizes[1] ?? 0;
+      const needFixPreviousPxSize =
+        newPreviousSiblingPxSize !== currentPreviousSiblingPxSize &&
+        newPreviousSiblingPxSize <= previousMinSize &&
+        currentPreviousSiblingPxSize > previousMinSize;
+      if (needFixPreviousPxSize) {
         const fixPreviousSizePx = previousMinSize;
         const fixNextSizePx =
-          currentNextSiblingSizePx + currentPreviousSiblingSizePx - previousMinSize;
+          currentNextSiblingPxSize +
+          currentPreviousSiblingPxSize -
+          previousMinSize;
         callback([fixPreviousSizePx, fixNextSizePx], moveDistance);
       }
-      const needFixNextSizePx = (newNextSiblingSizePx !== currentNextSiblingSizePx &&
-        newNextSiblingSizePx <= nexMinSize &&
-        currentNextSiblingSizePx > nexMinSize);
-      if (needFixNextSizePx) {
+      const needFixNextPxSize =
+        newNextSiblingPxSize !== currentNextSiblingPxSize &&
+        newNextSiblingPxSize <= nexMinSize &&
+        currentNextSiblingPxSize > nexMinSize;
+      if (needFixNextPxSize) {
         const fixPreviousSizePx =
-          currentPreviousSiblingSizePx + currentNextSiblingSizePx - nexMinSize;
+          currentPreviousSiblingPxSize + currentNextSiblingPxSize - nexMinSize;
         const fixNextSizePx = nexMinSize;
         callback([fixPreviousSizePx, fixNextSizePx], moveDistance);
       }
     };
-    const fixedMode = (moveDistance: number, direction: Direction, callback: (previousSiblingSizePx: number, moveDistance: number) => void) => {
+    const fixedMode = (
+      moveDistance: number,
+      direction: Direction,
+      callback: (previousSiblingSizePx: number, moveDistance: number) => void
+    ) => {
       if (
         !gutterRef.current ||
         !(gutterRef.current.previousSibling instanceof HTMLElement) ||
@@ -114,22 +129,26 @@ const Gutter = ({
       }
 
       const styleKey = getStyleKey(direction);
-      const newPreviousSiblingSizePx =
+      const newPreviousSiblingPxSize =
         previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
-      const siblingMinSize = getSiblingSizes(minItemSizes, index)
+      const siblingMinSize = getSiblingSizes(minItemSizes, index);
       const previousMinSize = siblingMinSize[0] ?? 0;
-      const newSizeBiggerMinSize = newPreviousSiblingSizePx > previousMinSize;
-      const currentPreviousSiblingSizePx = gutterRef.current.previousSibling.getBoundingClientRect()[styleKey]
-      const currentSizeBiggerMinSize = currentPreviousSiblingSizePx > previousMinSize;
+      const newSizeBiggerMinSize = newPreviousSiblingPxSize > previousMinSize;
+      const currentPreviousSiblingPxSize =
+        gutterRef.current.previousSibling.getBoundingClientRect()[styleKey];
+      const currentSizeBiggerMinSize =
+        currentPreviousSiblingPxSize > previousMinSize;
 
       if (newSizeBiggerMinSize) {
         gutterRef.current.previousSibling.style[
           styleKey
-        ] = `${newPreviousSiblingSizePx}px`;
-        callback(newPreviousSiblingSizePx, moveDistance)
+        ] = `${newPreviousSiblingPxSize}px`;
+        callback(newPreviousSiblingPxSize, moveDistance);
       } else if (currentSizeBiggerMinSize) {
-        gutterRef.current.previousSibling.style[styleKey] = `${previousMinSize}px`;
-        callback(previousMinSize, moveDistance)
+        gutterRef.current.previousSibling.style[
+          styleKey
+        ] = `${previousMinSize}px`;
+        callback(previousMinSize, moveDistance);
       }
     };
     const onMouseMove = (event: MouseEvent) => {
@@ -137,17 +156,25 @@ const Gutter = ({
       if (direction === 'horizontal') {
         const moveDistance = event.clientX - mouseDownPositionRef.current.x;
         if (flexContainer) {
-          flexMode(moveDistance, direction, (siblingItemSizes) => { onGutterMove?.(siblingItemSizes, event); });
+          flexMode(moveDistance, direction, (siblingItemSizes) => {
+            onGutterMove?.(siblingItemSizes, event);
+          });
         } else {
-          fixedMode(moveDistance, direction, (previousSiblingSizePx) => { onGutterMove?.([previousSiblingSizePx], event); });
+          fixedMode(moveDistance, direction, (previousSiblingSizePx) => {
+            onGutterMove?.([previousSiblingSizePx], event);
+          });
         }
       }
       if (direction === 'vertical') {
         const moveDistance = event.clientY - mouseDownPositionRef.current.y;
         if (flexContainer) {
-          flexMode(moveDistance, direction, (siblingItemSizes) => { onGutterMove?.(siblingItemSizes, event); });
+          flexMode(moveDistance, direction, (siblingItemSizes) => {
+            onGutterMove?.(siblingItemSizes, event);
+          });
         } else {
-          fixedMode(moveDistance, direction, (previousSiblingSizePx) => { onGutterMove?.([previousSiblingSizePx], event); });
+          fixedMode(moveDistance, direction, (previousSiblingSizePx) => {
+            onGutterMove?.([previousSiblingSizePx], event);
+          });
         }
       }
     };

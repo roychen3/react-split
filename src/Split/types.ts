@@ -8,13 +8,12 @@ export type MousePosition = { x: number; y: number };
 
 export type Direction = 'horizontal' | 'vertical';
 
-export type ItemSizes = number | number[]
+export type ItemSizes = number | number[];
 
-type GutterHTMLProps = Omit<React.HTMLProps<HTMLDivElement>,
-  | 'ref'
-  | 'className'
-  | 'onMouseDown'
->
+type GutterHTMLProps = Omit<
+  React.HTMLProps<HTMLDivElement>,
+  'ref' | 'className' | 'onMouseDown'
+>;
 export interface GutterProps extends GutterHTMLProps {
   index: number;
   direction?: Direction;
@@ -31,7 +30,7 @@ export interface SplitProps extends React.HTMLProps<HTMLDivElement> {
   direction?: Direction;
   flexContainer?: boolean;
   minItemSizes?: ItemSizes;
-  itemSizes?: ItemSizes;
+  // itemSizes?: ItemSizes;
   gutterStyle?: React.CSSProperties;
   onGutterDown?: (itemSizes: number[], event: MouseEvent) => void;
   onGutterMove?: (itemSizes: number[], event: MouseEvent) => void;

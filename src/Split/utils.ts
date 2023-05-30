@@ -48,7 +48,7 @@ export const formatItemSizes = (itemSizes: ItemSizes, length?: number): number[]
   return []
 }
 
-export const pixelToPercent = (pixel: number, denominator: number): number => {
+export const toPercent = (pixel: number, denominator: number): number => {
   if (pixel === 0) return 0
   if (denominator === 0) throw Error('denominator not to be "0"')
   return pixel / denominator * 100

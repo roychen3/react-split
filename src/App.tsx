@@ -1,20 +1,35 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import Split from './Split';
 
 import './styles.css';
 
 export default function App() {
-  const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<number | number[]>()
-  const [horizontalFlexItemSizes, setHorizontalFlexItemSizes] = useState<number | number[]>()
+  const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<
+    number | number[]
+  >();
+  const [horizontalFlexItemSizes, setHorizontalFlexItemSizes] = useState<
+    number | number[]
+  >();
 
-  const [minHorizontalFixedItemSizes, setHorizontalFixedMinItemSizes] = useState<number | number[]>()
-  const [horizontalFixedItemSizes, setHorizontalFixedItemSizes] = useState<number | number[]>()
+  const [minHorizontalFixedItemSizes, setHorizontalFixedMinItemSizes] =
+    useState<number | number[]>();
+  const [horizontalFixedItemSizes, setHorizontalFixedItemSizes] = useState<
+    number | number[]
+  >();
 
-  const [minVerticalFlexItemSizes, setVerticalFlexMinItemSizes] = useState<number | number[]>()
-  const [verticalFlexItemSizes, setVerticalFlexItemSizes] = useState<number | number[]>()
+  const [minVerticalFlexItemSizes, setVerticalFlexMinItemSizes] = useState<
+    number | number[]
+  >();
+  const [verticalFlexItemSizes, setVerticalFlexItemSizes] = useState<
+    number | number[]
+  >();
 
-  const [minVerticalFixedItemSizes, setVerticalFixedMinItemSizes] = useState<number | number[]>()
-  const [verticalFixedItemSizes, setVerticalFixedItemSizes] = useState<number | number[]>()
+  const [minVerticalFixedItemSizes, setVerticalFixedMinItemSizes] = useState<
+    number | number[]
+  >();
+  const [verticalFixedItemSizes, setVerticalFixedItemSizes] = useState<
+    number | number[]
+  >();
   return (
     <div className="App">
       <h1>Basic</h1>
@@ -28,98 +43,118 @@ export default function App() {
 
       <h3>set min item size</h3>
       <div>
-        <button onClick={() => {
-          const newSizes = 30;
-          setHorizontalFlexMinItemSizes(newSizes)
-          setHorizontalFixedMinItemSizes(newSizes)
-          setVerticalFlexMinItemSizes(newSizes)
-          setVerticalFixedMinItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = 30;
+            setHorizontalFlexMinItemSizes(newSizes);
+            setHorizontalFixedMinItemSizes(newSizes);
+            setVerticalFlexMinItemSizes(newSizes);
+            setVerticalFixedMinItemSizes(newSizes);
+          }}
+        >
           set all item size to 30
         </button>
-        <button onClick={() => {
-          const newSizes = 200;
-          setHorizontalFlexMinItemSizes(newSizes)
-          setHorizontalFixedMinItemSizes(newSizes)
-          setVerticalFlexMinItemSizes(newSizes)
-          setVerticalFixedMinItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = 200;
+            setHorizontalFlexMinItemSizes(newSizes);
+            setHorizontalFixedMinItemSizes(newSizes);
+            setVerticalFlexMinItemSizes(newSizes);
+            setVerticalFixedMinItemSizes(newSizes);
+          }}
+        >
           set all item size to 200
         </button>
-        <button onClick={() => {
-          const newSizes = [10, 20, 30, 60, 120];
-          setHorizontalFlexMinItemSizes(newSizes)
-          setHorizontalFixedMinItemSizes(newSizes)
-          setVerticalFlexMinItemSizes(newSizes)
-          setVerticalFixedMinItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = [10, 20, 30, 60, 120];
+            setHorizontalFlexMinItemSizes(newSizes);
+            setHorizontalFixedMinItemSizes(newSizes);
+            setVerticalFlexMinItemSizes(newSizes);
+            setVerticalFixedMinItemSizes(newSizes);
+          }}
+        >
           set all item size to [10, 20, 30, 60, 120]
         </button>
-        <button onClick={() => {
-          const newSizes = [120, 60, 30, 20, 10];
-          setHorizontalFlexMinItemSizes(newSizes)
-          setHorizontalFixedMinItemSizes(newSizes)
-          setVerticalFlexMinItemSizes(newSizes)
-          setVerticalFixedMinItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = [120, 60, 30, 20, 10];
+            setHorizontalFlexMinItemSizes(newSizes);
+            setHorizontalFixedMinItemSizes(newSizes);
+            setVerticalFlexMinItemSizes(newSizes);
+            setVerticalFixedMinItemSizes(newSizes);
+          }}
+        >
           set all item size to [120, 60, 30, 20, 10]
         </button>
-        <button onClick={() => {
-          const newSizes: number[] = [];
-          setHorizontalFlexMinItemSizes(newSizes)
-          setHorizontalFixedMinItemSizes(newSizes)
-          setVerticalFlexMinItemSizes(newSizes)
-          setVerticalFixedMinItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes: number[] = [];
+            setHorizontalFlexMinItemSizes(newSizes);
+            setHorizontalFixedMinItemSizes(newSizes);
+            setVerticalFlexMinItemSizes(newSizes);
+            setVerticalFixedMinItemSizes(newSizes);
+          }}
+        >
           set all item size to []
         </button>
       </div>
 
       <h3>set item size</h3>
       <div>
-        <button onClick={() => {
-          const newSizes = 30;
-          setHorizontalFlexItemSizes(newSizes)
-          setHorizontalFixedItemSizes(newSizes)
-          setVerticalFlexItemSizes(newSizes)
-          setVerticalFixedItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = 30;
+            setHorizontalFlexItemSizes(newSizes);
+            setHorizontalFixedItemSizes(newSizes);
+            setVerticalFlexItemSizes(newSizes);
+            setVerticalFixedItemSizes(newSizes);
+          }}
+        >
           set all item size to 30
         </button>
-        <button onClick={() => {
-          const newSizes = 200;
-          setHorizontalFlexItemSizes(newSizes)
-          setHorizontalFixedItemSizes(newSizes)
-          setVerticalFlexItemSizes(newSizes)
-          setVerticalFixedItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = 200;
+            setHorizontalFlexItemSizes(newSizes);
+            setHorizontalFixedItemSizes(newSizes);
+            setVerticalFlexItemSizes(newSizes);
+            setVerticalFixedItemSizes(newSizes);
+          }}
+        >
           set all item size to 200
         </button>
-        <button onClick={() => {
-          const newSizes = [10, 20, 30, 60, 120];
-          setHorizontalFlexItemSizes(newSizes)
-          setHorizontalFixedItemSizes(newSizes)
-          setVerticalFlexItemSizes(newSizes)
-          setVerticalFixedItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = [10, 20, 30, 60, 120];
+            setHorizontalFlexItemSizes(newSizes);
+            setHorizontalFixedItemSizes(newSizes);
+            setVerticalFlexItemSizes(newSizes);
+            setVerticalFixedItemSizes(newSizes);
+          }}
+        >
           set all item size to [10, 20, 30, 60, 120]
         </button>
-        <button onClick={() => {
-          const newSizes = [120, 60, 30, 20, 10];
-          setHorizontalFlexItemSizes(newSizes)
-          setHorizontalFixedItemSizes(newSizes)
-          setVerticalFlexItemSizes(newSizes)
-          setVerticalFixedItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes = [120, 60, 30, 20, 10];
+            setHorizontalFlexItemSizes(newSizes);
+            setHorizontalFixedItemSizes(newSizes);
+            setVerticalFlexItemSizes(newSizes);
+            setVerticalFixedItemSizes(newSizes);
+          }}
+        >
           set all item size to [120, 60, 30, 20, 10]
         </button>
-        <button onClick={() => {
-          const newSizes: number[] = [];
-          setHorizontalFlexItemSizes(newSizes)
-          setHorizontalFixedItemSizes(newSizes)
-          setVerticalFlexItemSizes(newSizes)
-          setVerticalFixedItemSizes(newSizes)
-        }}>
+        <button
+          onClick={() => {
+            const newSizes: number[] = [];
+            setHorizontalFlexItemSizes(newSizes);
+            setHorizontalFixedItemSizes(newSizes);
+            setVerticalFlexItemSizes(newSizes);
+            setVerticalFixedItemSizes(newSizes);
+          }}
+        >
           set all item size to []
         </button>
       </div>
@@ -128,17 +163,17 @@ export default function App() {
       <div className="container container-horizontal">
         <Split
           minItemSizes={minHorizontalFlexItemSizes}
-          itemSizes={horizontalFlexItemSizes}
+          // itemSizes={horizontalFlexItemSizes}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
             // console.log('onGutterMove', newItemSizes);
-            setHorizontalFlexItemSizes(newItemSizes)
+            setHorizontalFlexItemSizes(newItemSizes);
           }}
-        // onGutterUp={(newItemSizes) => {
-        //   console.log('onGutterUp', newItemSizes);
-        // }}
+          // onGutterUp={(newItemSizes) => {
+          //   console.log('onGutterUp', newItemSizes);
+          // }}
         >
           <div className="block">A Component</div>
           <div className="block">B Component</div>
@@ -154,17 +189,17 @@ export default function App() {
         <Split
           flexContainer={false}
           minItemSizes={minHorizontalFixedItemSizes}
-          itemSizes={horizontalFixedItemSizes}
+          // itemSizes={horizontalFixedItemSizes}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
             // console.log('onGutterMove', newItemSizes);
-            setHorizontalFixedItemSizes(newItemSizes)
+            setHorizontalFixedItemSizes(newItemSizes);
           }}
-        // onGutterUp={(newItemSizes) => {
-        //   console.log('onGutterUp', newItemSizes);
-        // }}
+          // onGutterUp={(newItemSizes) => {
+          //   console.log('onGutterUp', newItemSizes);
+          // }}
         >
           <div className="block">A Component</div>
           <div className="block">B Component</div>
@@ -180,17 +215,17 @@ export default function App() {
         <Split
           direction="vertical"
           minItemSizes={minVerticalFlexItemSizes}
-          itemSizes={verticalFlexItemSizes}
+          // itemSizes={verticalFlexItemSizes}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
             // console.log('onGutterMove', newItemSizes);
-            setVerticalFlexItemSizes(newItemSizes)
+            setVerticalFlexItemSizes(newItemSizes);
           }}
-        // onGutterUp={(newItemSizes) => {
-        //   console.log('onGutterUp', newItemSizes);
-        // }}
+          // onGutterUp={(newItemSizes) => {
+          //   console.log('onGutterUp', newItemSizes);
+          // }}
         >
           <div className="block">A Component</div>
           <div className="block">B Component</div>
@@ -207,17 +242,17 @@ export default function App() {
           direction="vertical"
           flexContainer={false}
           minItemSizes={minVerticalFixedItemSizes}
-          itemSizes={verticalFixedItemSizes}
+          // itemSizes={verticalFixedItemSizes}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
           onGutterMove={(newItemSizes) => {
             // console.log('onGutterMove', newItemSizes);
-            setVerticalFixedItemSizes(newItemSizes)
+            setVerticalFixedItemSizes(newItemSizes);
           }}
-        // onGutterUp={(newItemSizes) => {
-        //   console.log('onGutterUp', newItemSizes);
-        // }}
+          // onGutterUp={(newItemSizes) => {
+          //   console.log('onGutterUp', newItemSizes);
+          // }}
         >
           <div className="block">A Component</div>
           <div className="block">B Component</div>
