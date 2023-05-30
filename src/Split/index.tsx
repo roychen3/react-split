@@ -158,20 +158,20 @@ const Split = ({
                 onGutterDown={(event) => {
                   onGutterDown?.(itemSizes, event);
                 }}
-                onGutterMove={(newSiblingItemSizes, event) => {
-                  const newPxItemSizes = itemSizes.map(
+                onGutterMove={(newSiblingPixelItemSizes, event) => {
+                  const newPixelItemSizes = itemSizes.map(
                     (itemSize, itemSizeIdx) => {
                       if (childIdx === itemSizeIdx) {
-                        return newSiblingItemSizes[0];
+                        return newSiblingPixelItemSizes[0];
                       }
                       if (childIdx + 1 === itemSizeIdx) {
-                        return newSiblingItemSizes[1] ?? itemSize;
+                        return newSiblingPixelItemSizes[1] ?? itemSize;
                       }
                       return itemSize;
                     }
                   );
-                  updateItemSizes(newPxItemSizes);
-                  onGutterMove?.(newPxItemSizes, event);
+                  updateItemSizes(newPixelItemSizes);
+                  onGutterMove?.(newPixelItemSizes, event);
                 }}
                 onGutterUp={(event) => {
                   onGutterUp?.(itemSizes, event);
