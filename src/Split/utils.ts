@@ -1,4 +1,4 @@
-import { Direction } from './types'
+import { Direction, ItemSizes } from './types'
 
 export const getStyleKey = (direction: Direction): 'width' | 'height' => {
   switch (direction) {
@@ -41,4 +41,14 @@ export const formatSize = (minSize: number | null, size: number | null): number 
     return Math.max(minSize, size)
   }
   return null
+}
+
+export const formatItemSizes = (itemSizes: ItemSizes, length?: number): number[] => {
+  if (typeof itemSizes === 'number' && length) {
+    return Array.from({ length: length }, () => itemSizes)
+  }
+  if (itemSizes instanceof Array) {
+    return itemSizes
+  }
+  return []
 }
