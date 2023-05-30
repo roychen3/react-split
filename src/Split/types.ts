@@ -31,6 +31,7 @@ export interface SplitProps extends React.HTMLProps<HTMLDivElement> {
   flexContainer?: boolean;
   minItemSizes?: ItemSizes;
   // itemSizes?: ItemSizes;
+  gutterSize?: number;
   gutterStyle?: React.CSSProperties;
   onGutterDown?: (itemSizes: number[], event: MouseEvent) => void;
   onGutterMove?: (itemSizes: number[], event: MouseEvent) => void;

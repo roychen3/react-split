@@ -16,6 +16,7 @@ const Split = ({
   flexContainer = true,
   minItemSizes: outsideMinItemSizes = [],
   // itemSizes: outsideItemSizes,
+  gutterSize = 10,
   gutterStyle,
   onGutterDown,
   onGutterMove,
@@ -65,29 +66,25 @@ const Split = ({
         toPercent(pxSize, totalPixelItemSize)
       );
       setPercentItemSizes(percentItemSizes);
-      const gutterElementPxSize = splitRef.current
-        .querySelector('.gutter')
-        ?.getBoundingClientRect()[styleKey];
-      if (isNumber(gutterElementPxSize)) {
-        const percentStringItemSizes = percentItemSizes.map(
-          (percentSize, percentSizeIdx) => {
-            if (
-              percentSizeIdx === 0 ||
-              percentSizeIdx + 1 === percentItemSizes.length
-            ) {
-              return `calc(${percentSize}% - ${gutterElementPxSize / 2}px`;
-            }
 
-            return `calc(${percentSize}% - ${gutterElementPxSize}px`;
+      const percentStringItemSizes = percentItemSizes.map(
+        (percentSize, percentSizeIdx) => {
+          if (
+            percentSizeIdx === 0 ||
+            percentSizeIdx + 1 === percentItemSizes.length
+          ) {
+            return `calc(${percentSize}% - ${gutterSize / 2}px`;
           }
-        );
-        setPercentStringItemSizes(percentStringItemSizes);
-      }
+
+          return `calc(${percentSize}% - ${gutterSize}px`;
+        }
+      );
+      setPercentStringItemSizes(percentStringItemSizes);
     };
 
     // set mount size
     useEffect(() => {
-      if (splitRef.current && splitRef.current.querySelector('.gutter')) {
+      if (splitRef.current) {
         // auto fill split item size
         const splitItemElements =
           splitRef.current.querySelectorAll('.split__item');
@@ -150,6 +147,7 @@ const Split = ({
               </div>
               <Gutter
                 index={childIdx}
+                size={gutterSize}
                 style={gutterStyle}
                 direction={direction}
                 flexContainer={flexContainer}

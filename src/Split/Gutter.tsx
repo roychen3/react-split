@@ -12,6 +12,8 @@ const defaultSiblingElement: SiblingInfo = {
 
 const Gutter = ({
   index,
+  size = 10,
+  style,
   direction = 'horizontal',
   flexContainer = true,
   minItemSizes,
@@ -26,6 +28,7 @@ const Gutter = ({
   const nextSiblingInfoRef = useRef<SiblingInfo>(defaultSiblingElement);
   const mouseDownPositionRef = useRef<MousePosition>(defaultMousePosition);
   const [mouseDown, setMouseDown] = useState(false);
+  const styleKey = getStyleKey(direction);
 
   const onMouseDown = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -55,7 +58,6 @@ const Gutter = ({
   useEffect(() => {
     const flexMode = (
       moveDistance: number,
-      direction: Direction,
       callback: (siblingItemPixelSizes: number[], moveDistance: number) => void
     ) => {
       if (
@@ -65,22 +67,25 @@ const Gutter = ({
       )
         return;
 
-      const styleKey = getStyleKey(direction);
-
       // calculate new size
       const newPreviousSiblingPixelSize =
         previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
       const newNextSiblingPixelSize =
         nextSiblingInfoRef.current.startRect[styleKey] - moveDistance;
 
-      const siblingMinSizes = getSiblingSizes(minItemSizes ?? [], index);
-      const previousMinPixelSize = siblingMinSizes[0] ?? 0;
-      const nextMinPixelSize = siblingMinSizes[1] ?? 0;
-
       // set new size
+      const adjustPreviousGutterMinSize = index === 0 ? size / 2 : size;
+      const adjustNextGutterMinSize =
+        index + 2 === itemSizes.length ? size / 2 : size;
+      const siblingMinSizes = getSiblingSizes(minItemSizes ?? [], index);
+      const previousMinPixelSize =
+        (siblingMinSizes[0] ?? 0) + adjustPreviousGutterMinSize;
+      const nextMinPixelSize =
+        (siblingMinSizes[1] ?? 0) + adjustNextGutterMinSize;
       const newPreviousSizeBiggerMinSize =
         newPreviousSiblingPixelSize >= previousMinPixelSize;
-      const newNextSizeBiggerMinSize = newNextSiblingPixelSize >= nextMinPixelSize;
+      const newNextSizeBiggerMinSize =
+        newNextSiblingPixelSize >= nextMinPixelSize;
       if (newPreviousSizeBiggerMinSize && newNextSizeBiggerMinSize) {
         callback(
           [newPreviousSiblingPixelSize, newNextSiblingPixelSize],
@@ -110,14 +115,15 @@ const Gutter = ({
         currentNextSiblingPixelSize > nextMinPixelSize;
       if (needFixNextPxSize) {
         const fixPreviousSizePx =
-          currentPreviousSiblingPixelSize + currentNextSiblingPixelSize - nextMinPixelSize;
+          currentPreviousSiblingPixelSize +
+          currentNextSiblingPixelSize -
+          nextMinPixelSize;
         const fixNextSizePx = nextMinPixelSize;
         callback([fixPreviousSizePx, fixNextSizePx], moveDistance);
       }
     };
     const fixedMode = (
       moveDistance: number,
-      direction: Direction,
       callback: (previousSiblingPixelSize: number, moveDistance: number) => void
     ) => {
       if (
@@ -128,12 +134,12 @@ const Gutter = ({
         return;
       }
 
-      const styleKey = getStyleKey(direction);
       const newPreviousSiblingPixelSize =
         previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
       const siblingMinSize = getSiblingSizes(minItemSizes, index);
       const previousMinPixelSize = siblingMinSize[0] ?? 0;
-      const newSizeBiggerMinSize = newPreviousSiblingPixelSize > previousMinPixelSize;
+      const newSizeBiggerMinSize =
+        newPreviousSiblingPixelSize > previousMinPixelSize;
       const currentPreviousSiblingPixelSize =
         gutterRef.current.previousSibling.getBoundingClientRect()[styleKey];
       const currentSizeBiggerMinSize =
@@ -156,11 +162,12 @@ const Gutter = ({
       if (direction === 'horizontal') {
         const moveDistance = event.clientX - mouseDownPositionRef.current.x;
         if (flexContainer) {
-          flexMode(moveDistance, direction, (siblingItemPixelSizes) => {
+          flexMode(moveDistance, (siblingItemPixelSizes) => {
             onGutterMove?.(siblingItemPixelSizes, event);
+            console.log('siblingItemPixelSizes', siblingItemPixelSizes);
           });
         } else {
-          fixedMode(moveDistance, direction, (previousSiblingPixelSize) => {
+          fixedMode(moveDistance, (previousSiblingPixelSize) => {
             onGutterMove?.([previousSiblingPixelSize], event);
           });
         }
@@ -168,11 +175,12 @@ const Gutter = ({
       if (direction === 'vertical') {
         const moveDistance = event.clientY - mouseDownPositionRef.current.y;
         if (flexContainer) {
-          flexMode(moveDistance, direction, (siblingItemPixelSizes) => {
+          flexMode(moveDistance, (siblingItemPixelSizes) => {
             onGutterMove?.(siblingItemPixelSizes, event);
+            console.log('siblingItemPixelSizes', siblingItemPixelSizes);
           });
         } else {
-          fixedMode(moveDistance, direction, (previousSiblingPixelSize) => {
+          fixedMode(moveDistance, (previousSiblingPixelSize) => {
             onGutterMove?.([previousSiblingPixelSize], event);
           });
         }
@@ -213,6 +221,10 @@ const Gutter = ({
     <div
       {...props}
       ref={gutterRef}
+      style={{
+        ...style,
+        [styleKey]: `${size}px`,
+      }}
       className={gutterClassName}
       onMouseDown={onMouseDown}
     ></div>

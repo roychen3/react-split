@@ -162,6 +162,7 @@ export default function App() {
       <h1>Horizontal & Flex</h1>
       <div className="container container-horizontal">
         <Split
+          // gutterSize={30}
           minItemSizes={minHorizontalFlexItemSizes}
           // itemSizes={horizontalFlexItemSizes}
           // onGutterDown={(newItemSizes) => {
@@ -188,6 +189,7 @@ export default function App() {
       <div className="container container-horizontal">
         <Split
           flexContainer={false}
+          // gutterSize={30}
           minItemSizes={minHorizontalFixedItemSizes}
           // itemSizes={horizontalFixedItemSizes}
           // onGutterDown={(newItemSizes) => {
@@ -214,6 +216,7 @@ export default function App() {
       <div className="container container-vertical">
         <Split
           direction="vertical"
+          // gutterSize={30}
           minItemSizes={minVerticalFlexItemSizes}
           // itemSizes={verticalFlexItemSizes}
           // onGutterDown={(newItemSizes) => {
@@ -241,6 +244,7 @@ export default function App() {
         <Split
           direction="vertical"
           flexContainer={false}
+          // gutterSize={30}
           minItemSizes={minVerticalFixedItemSizes}
           // itemSizes={verticalFixedItemSizes}
           // onGutterDown={(newItemSizes) => {
