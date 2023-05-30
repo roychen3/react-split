@@ -40,7 +40,7 @@ const Split = ({
   if (children instanceof Array) {
     const splitRef = useRef<HTMLDivElement>(null);
     const minItemSizes = formatItemSizes(outsideMinItemSizes, children.length);
-    const formattedOutsideItemSizes = formatItemSizes(outsideItemSizes, children.length)
+    const formattedOutsideItemSizes = formatItemSizes(outsideItemSizes, children.length);
     const [innerItemSizes, setInnerItemSizes] = useState<number[]>(formattedOutsideItemSizes);
     const itemSizes = formattedOutsideItemSizes.length >= innerItemSizes.length ? formattedOutsideItemSizes : innerItemSizes
     const styleKey = getStyleKey(direction);
@@ -61,20 +61,18 @@ const Split = ({
       <div {...props} ref={splitRef} className={`${splitClassName}${props.className ? ` ${props.className}` : ''}`}>
         {children.map((eachChild, childIdx) => {
           const renderSize = checkSizeRange(minItemSizes[childIdx], itemSizes[childIdx]);
+          const splitItemStyle = {
+            [styleKey]: isNumber(renderSize) ? `${renderSize}px` : undefined,
+            flex: isNumber(renderSize) ? undefined : '1'
+          }
 
           if (flexContainer && childIdx + 1 === children.length) {
-            return <div key={childIdx} className='split__item' style={{
-              [styleKey]: isNumber(renderSize) ? `${renderSize}px` : undefined,
-              flex: isNumber(renderSize) ? undefined : '1'
-            }}>{eachChild}</div>;
+            return <div key={childIdx} className='split__item' style={splitItemStyle}>{eachChild}</div>;
           }
 
           return (
             <Fragment key={childIdx}>
-              <div className='split__item' style={{
-                [styleKey]: isNumber(renderSize) ? `${renderSize}px` : undefined,
-                flex: isNumber(renderSize) ? undefined : '1'
-              }}>
+              <div className='split__item' style={splitItemStyle}>
                 {eachChild}
               </div>
               <Gutter
