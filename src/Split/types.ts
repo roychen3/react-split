@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 
 export type SiblingInfo = {
   startRect: DOMRect | null;
-  element: HTMLElement | null;
 };
 
 export type MousePosition = { x: number; y: number };
