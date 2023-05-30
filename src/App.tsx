@@ -4,37 +4,140 @@ import Split from './Split';
 import './styles.css';
 
 export default function App() {
-  const [minItemSizes, setMinItemSizes] = useState<number | number[]>([])
-  const [itemSizes, setItemSizes] = useState<number | number[]>([])
+  const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<number | number[]>()
+  const [horizontalFlexItemSizes, setHorizontalFlexItemSizes] = useState<number | number[]>()
+
+  const [minHorizontalFixedItemSizes, setHorizontalFixedMinItemSizes] = useState<number | number[]>()
+  const [horizontalFixedItemSizes, setHorizontalFixedItemSizes] = useState<number | number[]>()
+
+  const [minVerticalFlexItemSizes, setVerticalFlexMinItemSizes] = useState<number | number[]>()
+  const [verticalFlexItemSizes, setVerticalFlexItemSizes] = useState<number | number[]>()
+
+  const [minVerticalFixedItemSizes, setVerticalFixedMinItemSizes] = useState<number | number[]>()
+  const [verticalFixedItemSizes, setVerticalFixedItemSizes] = useState<number | number[]>()
   return (
     <div className="App">
-      <h3>set item size</h3>
-      <button onClick={() => { setItemSizes(30) }}>set all item size to 30</button>
-      <button onClick={() => { setItemSizes(200) }}>set all item size to 200</button>
-      <button onClick={() => { setItemSizes([10, 20, 30, 60, 120]) }}>set all item size to [10, 20, 30, 60, 120]</button>
-      <button onClick={() => { setItemSizes([120, 60, 30, 20, 10]) }}>set all item size to [120, 60, 30, 20, 10]</button>
-      <button onClick={() => { setItemSizes([]) }}>set all item size to []</button>
+      <h1>Basic</h1>
+      <div className="container container-horizontal">
+        <Split>
+          <div className="block">A Component</div>
+          <div className="block">B Component</div>
+        </Split>
+      </div>
+      <br />
 
       <h3>set min item size</h3>
-      <button onClick={() => { setMinItemSizes(30) }}>set all item min size to 30</button>
-      <button onClick={() => { setMinItemSizes(200) }}>set all item min size to 200</button>
-      <button onClick={() => { setMinItemSizes([10, 20, 30, 60, 120]) }}>set all item min size to [10, 20, 30, 60, 120]</button>
-      <button onClick={() => { setMinItemSizes([120, 60, 30, 20, 10]) }}>set all item min size to [120, 60, 30, 20, 10]</button>
-      <button onClick={() => { setMinItemSizes([]) }}>set all item min size to []</button>
+      <div>
+        <button onClick={() => {
+          const newSizes = 30;
+          setHorizontalFlexMinItemSizes(newSizes)
+          setHorizontalFixedMinItemSizes(newSizes)
+          setVerticalFlexMinItemSizes(newSizes)
+          setVerticalFixedMinItemSizes(newSizes)
+        }}>
+          set all item size to 30
+        </button>
+        <button onClick={() => {
+          const newSizes = 200;
+          setHorizontalFlexMinItemSizes(newSizes)
+          setHorizontalFixedMinItemSizes(newSizes)
+          setVerticalFlexMinItemSizes(newSizes)
+          setVerticalFixedMinItemSizes(newSizes)
+        }}>
+          set all item size to 200
+        </button>
+        <button onClick={() => {
+          const newSizes = [10, 20, 30, 60, 120];
+          setHorizontalFlexMinItemSizes(newSizes)
+          setHorizontalFixedMinItemSizes(newSizes)
+          setVerticalFlexMinItemSizes(newSizes)
+          setVerticalFixedMinItemSizes(newSizes)
+        }}>
+          set all item size to [10, 20, 30, 60, 120]
+        </button>
+        <button onClick={() => {
+          const newSizes = [120, 60, 30, 20, 10];
+          setHorizontalFlexMinItemSizes(newSizes)
+          setHorizontalFixedMinItemSizes(newSizes)
+          setVerticalFlexMinItemSizes(newSizes)
+          setVerticalFixedMinItemSizes(newSizes)
+        }}>
+          set all item size to [120, 60, 30, 20, 10]
+        </button>
+        <button onClick={() => {
+          const newSizes: number[] = [];
+          setHorizontalFlexMinItemSizes(newSizes)
+          setHorizontalFixedMinItemSizes(newSizes)
+          setVerticalFlexMinItemSizes(newSizes)
+          setVerticalFixedMinItemSizes(newSizes)
+        }}>
+          set all item size to []
+        </button>
+      </div>
+
+      <h3>set item size</h3>
+      <div>
+        <button onClick={() => {
+          const newSizes = 30;
+          setHorizontalFlexItemSizes(newSizes)
+          setHorizontalFixedItemSizes(newSizes)
+          setVerticalFlexItemSizes(newSizes)
+          setVerticalFixedItemSizes(newSizes)
+        }}>
+          set all item size to 30
+        </button>
+        <button onClick={() => {
+          const newSizes = 200;
+          setHorizontalFlexItemSizes(newSizes)
+          setHorizontalFixedItemSizes(newSizes)
+          setVerticalFlexItemSizes(newSizes)
+          setVerticalFixedItemSizes(newSizes)
+        }}>
+          set all item size to 200
+        </button>
+        <button onClick={() => {
+          const newSizes = [10, 20, 30, 60, 120];
+          setHorizontalFlexItemSizes(newSizes)
+          setHorizontalFixedItemSizes(newSizes)
+          setVerticalFlexItemSizes(newSizes)
+          setVerticalFixedItemSizes(newSizes)
+        }}>
+          set all item size to [10, 20, 30, 60, 120]
+        </button>
+        <button onClick={() => {
+          const newSizes = [120, 60, 30, 20, 10];
+          setHorizontalFlexItemSizes(newSizes)
+          setHorizontalFixedItemSizes(newSizes)
+          setVerticalFlexItemSizes(newSizes)
+          setVerticalFixedItemSizes(newSizes)
+        }}>
+          set all item size to [120, 60, 30, 20, 10]
+        </button>
+        <button onClick={() => {
+          const newSizes: number[] = [];
+          setHorizontalFlexItemSizes(newSizes)
+          setHorizontalFixedItemSizes(newSizes)
+          setVerticalFlexItemSizes(newSizes)
+          setVerticalFixedItemSizes(newSizes)
+        }}>
+          set all item size to []
+        </button>
+      </div>
 
       <h1>Horizontal & Flex</h1>
       <div className="container container-horizontal">
         <Split
-          minItemSizes={minItemSizes}
-          itemSizes={itemSizes}
-        // onGutterDown={(event) => {
-        //   console.log('onGutterDown', event);
-        // }}
-        onGutterMove={(event) => {
-          console.log('onGutterMove', event);
-        }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+          minItemSizes={minHorizontalFlexItemSizes}
+          itemSizes={horizontalFlexItemSizes}
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
+          // }}
+          onGutterMove={(newItemSizes) => {
+            // console.log('onGutterMove', newItemSizes);
+            setHorizontalFlexItemSizes(newItemSizes)
+          }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
@@ -50,16 +153,17 @@ export default function App() {
       <div className="container container-horizontal">
         <Split
           flexContainer={false}
-          minItemSizes={minItemSizes}
-          itemSizes={itemSizes}
-        // onGutterDown={(event) => {
-        //   console.log('onGutterDown', event);
-        // }}
-        onGutterMove={(event) => {
-          console.log('onGutterMove', event);
-        }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+          minItemSizes={minHorizontalFixedItemSizes}
+          itemSizes={horizontalFixedItemSizes}
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
+          // }}
+          onGutterMove={(newItemSizes) => {
+            // console.log('onGutterMove', newItemSizes);
+            setHorizontalFixedItemSizes(newItemSizes)
+          }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
@@ -75,16 +179,17 @@ export default function App() {
       <div className="container container-vertical">
         <Split
           direction="vertical"
-          minItemSizes={minItemSizes}
-          itemSizes={itemSizes}
-        // onGutterDown={(event) => {
-        //   console.log('onGutterDown', event);
-        // }}
-        onGutterMove={(event) => {
-          console.log('onGutterMove', event);
-        }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+          minItemSizes={minVerticalFlexItemSizes}
+          itemSizes={verticalFlexItemSizes}
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
+          // }}
+          onGutterMove={(newItemSizes) => {
+            // console.log('onGutterMove', newItemSizes);
+            setVerticalFlexItemSizes(newItemSizes)
+          }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
@@ -101,16 +206,17 @@ export default function App() {
         <Split
           direction="vertical"
           flexContainer={false}
-          minItemSizes={minItemSizes}
-          itemSizes={itemSizes}
-        // onGutterDown={(event) => {
-        //   console.log('onGutterDown', event);
-        // }}
-        onGutterMove={(event) => {
-          console.log('onGutterMove', event);
-        }}
-        // onGutterUp={(event) => {
-        //   console.log('onGutterUp', event);
+          minItemSizes={minVerticalFixedItemSizes}
+          itemSizes={verticalFixedItemSizes}
+          // onGutterDown={(newItemSizes) => {
+          //   console.log('onGutterDown', newItemSizes);
+          // }}
+          onGutterMove={(newItemSizes) => {
+            // console.log('onGutterMove', newItemSizes);
+            setVerticalFixedItemSizes(newItemSizes)
+          }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
         // }}
         >
           <div className="block">A Component</div>
