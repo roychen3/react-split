@@ -174,22 +174,24 @@ const Split = ({
                     const totalSplitSize =
                       splitRef.current.getBoundingClientRect()[styleKey];
 
-                    // render_size = total_size * percent_item_size - gutter_size
+                    // renderSize = totalSplitSize * percent_item_size - gutterSize
 
-                    // const newItemSizes = getSplitItemSizes().map(
-                    //   (itemSize, itemSizeIdx) => {
-                    //     console.log(itemSize);
-                    //     if (
-                    //       itemSizeIdx === 0 ||
-                    //       itemSizeIdx + 1 === children.length
-                    //     ) {
-                    //       return (
-                    //         ((itemSize + gutterSize / 2) / totalSplitSize) * 100
-                    //       );
-                    //     }
-                    //     return ((itemSize + gutterSize) / totalSplitSize) * 100;
-                    //   }
-                    // );
+                    const newItemSizes2 = getSplitItemSizes().map(
+                      (renderSize, itemSizeIdx) => {
+                        console.log(renderSize);
+                        if (
+                          itemSizeIdx === 0 ||
+                          itemSizeIdx + 1 === children.length
+                        ) {
+                          return (
+                            ((renderSize + gutterSize / 2) / totalSplitSize) * 100
+                          );
+                        }
+                        return ((renderSize + gutterSize) / totalSplitSize) * 100;
+                      }
+                    );
+                    console.log('newItemSizes2', newItemSizes2.map((size) => Math.round(size)))
+                    console.log('percentItemSizes', percentItemSizes.map((size) => Math.round(size)))
 
                     const newItemSizes = percentItemSizes.map((percentSize) => {
                       const result =
@@ -198,6 +200,8 @@ const Split = ({
                         100;
                       return Math.round(result);
                     });
+                    console.log('newItemSizes', newItemSizes)
+                    console.log('itemSizes', itemSizes)
 
                     updateItemSizes(newItemSizes);
                   }
