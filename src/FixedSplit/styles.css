@@ -1,0 +1,33 @@
+/* split styles */
+.split.split--horizontal {
+  display: inline-flex;
+  height: 100%;
+}
+.split.split--horizontal.split--flex-container {
+  display: flex;
+  overflow-x: hidden;
+}
+.split.split--vertical {
+  display: flex;
+  flex-direction: column;
+}
+.split.split--vertical.split--flex-container {
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.split__item {
+  overflow: hidden;
+}
+
+/* gutter styles */
+.gutter {
+  background-color: #ddd;
+}
+.gutter--horizontal {
+  cursor: col-resize;
+}
+.gutter--vertical {
+  cursor: row-resize;
+  width: 100%;
+}
