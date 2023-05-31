@@ -5,6 +5,8 @@ import {
   formatItemSizes,
   checkSizeRange,
   getStyleKey,
+  isNumber,
+  fillItemSizes,
 } from './utils';
 import './styles.css';
 
@@ -35,12 +37,12 @@ const Split = ({
   const splitClassName = getSplitClassName();
 
   if (children instanceof Array) {
+    const splitRef = useRef<HTMLDivElement>(null);
     const minItemSizes = formatItemSizes(outsideMinItemSizes, children.length);
     const formattedOutsideItemSizes = formatItemSizes(outsideItemSizes ?? [], children.length);
     const [innerItemSizes, setInnerItemSizes] = useState<number[]>([]);
-    const itemSizes = outsideItemSizes ? formattedOutsideItemSizes : innerItemSizes;
+    const itemSizes = fillItemSizes(outsideItemSizes ? formattedOutsideItemSizes : innerItemSizes, children.length);
     const styleKey = getStyleKey(direction);
-    const splitRef = useRef<HTMLDivElement>(null);
 
     return (
       <div
@@ -54,7 +56,7 @@ const Split = ({
             minItemSizes[childIdx],
             itemSizes[childIdx]
           );
-          const renderSize = `${checkedSize}px`;
+          const renderSize = isNumber(checkedSize)?`${checkedSize}px`:null;
           const splitItemStyle = {
             [styleKey]: renderSize,
           };

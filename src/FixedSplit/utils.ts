@@ -38,12 +38,15 @@ export const checkSizeRange = (minSize: number | null, size: number | null): num
   return null
 }
 
-export const formatItemSizes = (itemSizes: ItemSizes, length?: number): number[] => {
-  if (isNumber(itemSizes) && length) {
+export const formatItemSizes = (itemSizes: ItemSizes, length: number): number[] => {
+  if (isNumber(itemSizes)) {
     return Array.from({ length: length }, () => itemSizes)
   }
-  if (itemSizes instanceof Array) {
-    return itemSizes
-  }
-  return []
+  return itemSizes;
+}
+
+export const fillItemSizes = (itemSizes: number[], length: number): number[] => {
+  const emptyArray: number[] = Array.from({length});
+  const result = emptyArray.map((empty, idx)=> itemSizes[idx]??empty);
+  return result
 }

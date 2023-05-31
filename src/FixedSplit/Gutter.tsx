@@ -61,32 +61,24 @@ const Gutter = ({
     ) => {
       if (
         !gutterRef.current ||
-        !(gutterRef.current.previousSibling instanceof HTMLElement) ||
         !previousSiblingInfoRef.current.startRect
       ) {
         return;
       }
 
-      const newPreviousSiblingPixelSize =
-        previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
+      const mouseDownPreviousSize = previousSiblingInfoRef.current.startRect[styleKey]
+      const newPreviousSiblingPixelSize = mouseDownPreviousSize + moveDistance;
       const siblingMinSize = getSiblingSizes(minItemSizes, index);
       const previousMinPixelSize = siblingMinSize[0] ?? 0;
       const newSizeBiggerMinSize =
         newPreviousSiblingPixelSize > previousMinPixelSize;
-      const currentPreviousSiblingPixelSize =
-        gutterRef.current.previousSibling.getBoundingClientRect()[styleKey];
+      const currentPreviousSiblingPixelSize = mouseDownPreviousSize;
       const currentSizeBiggerMinSize =
         currentPreviousSiblingPixelSize > previousMinPixelSize;
 
       if (newSizeBiggerMinSize) {
-        gutterRef.current.previousSibling.style[
-          styleKey
-        ] = `${newPreviousSiblingPixelSize}px`;
         callback(newPreviousSiblingPixelSize, moveDistance);
       } else if (currentSizeBiggerMinSize) {
-        gutterRef.current.previousSibling.style[
-          styleKey
-        ] = `${previousMinPixelSize}px`;
         callback(previousMinPixelSize, moveDistance);
       }
     };
