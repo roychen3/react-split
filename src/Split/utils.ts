@@ -48,8 +48,21 @@ export const formatItemSizes = (itemSizes: ItemSizes, length?: number): number[]
   return []
 }
 
-export const pxToPercent = (numerator: number, denominator: number): number => {
-  if (numerator === 0) return 0
+export const toPercent = (pixel: number, denominator: number): number => {
+  if (pixel === 0) return 0
   if (denominator === 0) throw Error('denominator not to be "0"')
-  return numerator / denominator * 100
+  return pixel / denominator * 100
+}
+
+export const isArrayEqual = (value: any[], other: any[]): boolean => {
+  if (value.length !== other.length) return false;
+
+  let result = true;
+  for (let idx = 0; idx < value.length; idx++) {
+    if (value[idx] !== other[idx]) {
+      result = false;
+      break;
+    }
+  }
+  return result;
 }
