@@ -53,3 +53,16 @@ export const toPercent = (pixel: number, denominator: number): number => {
   if (denominator === 0) throw Error('denominator not to be "0"')
   return pixel / denominator * 100
 }
+
+export const isArrayEqual = (value: any[], other: any[]): boolean => {
+  if (value.length !== other.length) return false;
+
+  let result = true;
+  for (let idx = 0; idx < value.length; idx++) {
+    if (value[idx] !== other[idx]) {
+      result = false;
+      break;
+    }
+  }
+  return result;
+}

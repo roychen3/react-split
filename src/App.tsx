@@ -4,6 +4,8 @@ import Split from './Split';
 import './styles.css';
 
 export default function App() {
+  const [childrenCount, setChildrenCount] = useState(5)
+
   const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<
     number | number[]
   >();
@@ -37,6 +39,8 @@ export default function App() {
         <Split>
           <div className="block">A Component</div>
           <div className="block">B Component</div>
+          <div className="block">C Component</div>
+          <div className="block">D Component</div>
         </Split>
       </div>
       <br />
@@ -159,6 +163,12 @@ export default function App() {
         </button>
       </div>
 
+      <button
+        onClick={() => { setChildrenCount(childrenCount + 1) }}
+      >
+        Add child
+      </button>
+
       <h1>Horizontal & Flex</h1>
       <div className="container container-horizontal">
         <Split
@@ -172,15 +182,13 @@ export default function App() {
             // console.log('onGutterMove', newItemSizes);
             setHorizontalFlexItemSizes(newItemSizes);
           }}
-          // onGutterUp={(newItemSizes) => {
-          //   console.log('onGutterUp', newItemSizes);
-          // }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
+        // }}
         >
-          <div className="block">A Component</div>
-          <div className="block">B Component</div>
-          <div className="block">C Component</div>
-          <div className="block">D Component</div>
-          <div className="block">E Component</div>
+          {Array.from(Array(childrenCount).keys()).map((item) => (
+            <div className="block">{item + 1} Component</div>
+          ))}
         </Split>
       </div>
       <br />
@@ -199,15 +207,13 @@ export default function App() {
             // console.log('onGutterMove', newItemSizes);
             setHorizontalFixedItemSizes(newItemSizes);
           }}
-          // onGutterUp={(newItemSizes) => {
-          //   console.log('onGutterUp', newItemSizes);
-          // }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
+        // }}
         >
-          <div className="block">A Component</div>
-          <div className="block">B Component</div>
-          <div className="block">C Component</div>
-          <div className="block">D Component</div>
-          <div className="block">E Component</div>
+          {Array.from(Array(childrenCount).keys()).map((item) => (
+            <div className="block">{item + 1} Component</div>
+          ))}
         </Split>
       </div>
       <br />
@@ -226,15 +232,13 @@ export default function App() {
             // console.log('onGutterMove', newItemSizes);
             setVerticalFlexItemSizes(newItemSizes);
           }}
-          // onGutterUp={(newItemSizes) => {
-          //   console.log('onGutterUp', newItemSizes);
-          // }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
+        // }}
         >
-          <div className="block">A Component</div>
-          <div className="block">B Component</div>
-          <div className="block">C Component</div>
-          <div className="block">D Component</div>
-          <div className="block">E Component</div>
+          {Array.from(Array(childrenCount).keys()).map((item) => (
+            <div className="block">{item + 1} Component</div>
+          ))}
         </Split>
       </div>
       <br />
@@ -254,15 +258,13 @@ export default function App() {
             // console.log('onGutterMove', newItemSizes);
             setVerticalFixedItemSizes(newItemSizes);
           }}
-          // onGutterUp={(newItemSizes) => {
-          //   console.log('onGutterUp', newItemSizes);
-          // }}
+        // onGutterUp={(newItemSizes) => {
+        //   console.log('onGutterUp', newItemSizes);
+        // }}
         >
-          <div className="block">A Component</div>
-          <div className="block">B Component</div>
-          <div className="block">C Component</div>
-          <div className="block">D Component</div>
-          <div className="block">E Component</div>
+          {Array.from(Array(childrenCount).keys()).map((item) => (
+            <div className="block">{item + 1} Component</div>
+          ))}
         </Split>
       </div>
     </div>
