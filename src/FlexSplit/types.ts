@@ -19,7 +19,8 @@ export interface GutterProps extends GutterHTMLProps {
   direction?: Direction;
   minItemSizes: ItemSizes;
   itemSizes: number[];
-  onGutterDown?: (event: MouseEvent) => void;
+  percentItemSizes: number[];
+  onGutterDown?: (newItemSizes: number[], event: MouseEvent) => void;
   onGutterMove?: (newSiblingSizes: number[], event: MouseEvent) => void;
   onGutterUp?: (event: MouseEvent) => void;
 }

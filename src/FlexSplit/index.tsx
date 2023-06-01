@@ -62,11 +62,8 @@ const Split = ({
       (pixelItemSizes: number[]) => {
         if (!splitRef.current) return;
 
-        const roundPixelItemSizes = pixelItemSizes.map((size) =>
-          Math.round(size)
-        );
-        setInnerItemSizes(roundPixelItemSizes);
-        const percentItemSizes = calculatePercentItemSizes(roundPixelItemSizes);
+        setInnerItemSizes(pixelItemSizes);
+        const percentItemSizes = calculatePercentItemSizes(pixelItemSizes);
         setPercentItemSizes(percentItemSizes);
         const percentStringItemSizes = percentItemSizes.map(
           (percentSize, percentSizeIdx) => {
@@ -84,22 +81,6 @@ const Split = ({
       },
       [gutterSize]
     );
-
-    const getSplitItemSizes = (): number[] => {
-      if (splitRef.current) {
-        // auto fill split item size
-        const splitItemElements =
-          splitRef.current.querySelectorAll('.split__item');
-        const splitItemRects = Array.from(splitItemElements).map(
-          (splitItemElement) => {
-            return splitItemElement.getBoundingClientRect();
-          }
-        );
-        const pixelItemSizes = splitItemRects.map((rect) => rect[styleKey]);
-        return pixelItemSizes;
-      }
-      return [];
-    };
 
     // set mount size
     useEffect(() => {
@@ -169,42 +150,9 @@ const Split = ({
                 direction={direction}
                 minItemSizes={minItemSizes}
                 itemSizes={itemSizes}
-                onGutterDown={(event) => {
-                  if (splitRef.current) {
-                    const totalSplitSize =
-                      splitRef.current.getBoundingClientRect()[styleKey];
-
-                    // renderSize = totalSplitSize * percent_item_size - gutterSize
-
-                    const newItemSizes2 = getSplitItemSizes().map(
-                      (renderSize, itemSizeIdx) => {
-                        console.log(renderSize);
-                        if (
-                          itemSizeIdx === 0 ||
-                          itemSizeIdx + 1 === children.length
-                        ) {
-                          return (
-                            ((renderSize + gutterSize / 2) / totalSplitSize) * 100
-                          );
-                        }
-                        return ((renderSize + gutterSize) / totalSplitSize) * 100;
-                      }
-                    );
-                    console.log('newItemSizes2', newItemSizes2.map((size) => Math.round(size)))
-                    console.log('percentItemSizes', percentItemSizes.map((size) => Math.round(size)))
-
-                    const newItemSizes = percentItemSizes.map((percentSize) => {
-                      const result =
-                        ((totalSplitSize - (children.length - 1) * gutterSize) *
-                          percentSize) /
-                        100;
-                      return Math.round(result);
-                    });
-                    console.log('newItemSizes', newItemSizes)
-                    console.log('itemSizes', itemSizes)
-
-                    updateItemSizes(newItemSizes);
-                  }
+                percentItemSizes={percentItemSizes}
+                onGutterDown={(newItemSizes, event) => {
+                  updateItemSizes(newItemSizes);
                   onGutterDown?.(itemSizes, event);
                 }}
                 onGutterMove={(newSiblingPixelItemSizes, event) => {
@@ -219,9 +167,8 @@ const Split = ({
                       return itemSize;
                     }
                   );
-                  updateItemSizes(
-                    newPixelItemSizes.map((size) => Math.round(size))
-                  );
+
+                  updateItemSizes(newPixelItemSizes);
                   onGutterMove?.(newPixelItemSizes, event);
                 }}
                 onGutterUp={(event) => {
