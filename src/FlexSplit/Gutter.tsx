@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { GutterProps, MousePosition, SiblingInfo, Direction } from './types';
+import { GutterProps, MousePosition } from './types';
 import { getStyleKey, getSiblingSizes } from './utils';
+
+// a: gutter pervious sibling element
+// b: gutter next sibling element
 
 const defaultMousePosition: MousePosition = {
   x: 0,
@@ -23,18 +26,14 @@ const Gutter = ({
   const gutterRef = useRef<HTMLDivElement>(null);
   const mouseDownPositionRef = useRef<MousePosition>(defaultMousePosition);
   const [mouseDown, setMouseDown] = useState(false);
-  const styleKey = getStyleKey(direction);
   const [mouseDownItemSizes, setMouseDownItemSizes] = useState<number[]>([]);
+  const styleKey = getStyleKey(direction);
 
   const onMouseDown = (event: React.MouseEvent) => {
-    event.preventDefault();
     if (!gutterRef.current || !gutterRef.current.parentElement) return;
-    setMouseDown(true);
-    mouseDownPositionRef.current = {
-      x: event.clientX,
-      y: event.clientY,
-    };
 
+    event.preventDefault();
+    setMouseDown(true);
     const totalSplitSize =
       gutterRef.current.parentElement.getBoundingClientRect()[styleKey];
     const newItemSizes = percentItemSizes.map((percentSize) => {
@@ -46,6 +45,10 @@ const Gutter = ({
     });
     setMouseDownItemSizes(newItemSizes);
     onGutterDown?.(newItemSizes, event.nativeEvent);
+    mouseDownPositionRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+    };
   };
 
   useEffect(() => {
@@ -53,20 +56,17 @@ const Gutter = ({
       moveDistance: number,
       callback: (siblingItemSizes: number[], moveDistance: number) => void
     ) => {
-      if (
-        !gutterRef.current ||
-        !(gutterRef.current.parentElement instanceof HTMLElement)
-      ) {
+      if (!gutterRef.current) {
         return;
       }
 
-      const currentSiblingSizes = getSiblingSizes(mouseDownItemSizes, index);
-      const currentASize = currentSiblingSizes[0] ?? 0;
-      const currentBSize = currentSiblingSizes[1] ?? 0;
+      const startSiblingSizes = getSiblingSizes(mouseDownItemSizes, index);
+      const startASize = startSiblingSizes[0] ?? 0;
+      const startBSize = startSiblingSizes[1] ?? 0;
 
       // calculate new size
-      const newASize = currentASize + moveDistance;
-      const newBSize = currentBSize - moveDistance;
+      const newASize = startASize + moveDistance;
+      const newBSize = startBSize - moveDistance;
 
       // calculate min size
       const aGutterSize = index === 0 ? size / 2 : size;
@@ -84,13 +84,28 @@ const Gutter = ({
       }
 
       // fix size
+      // aMinSize = totalSplitSize * realMinPercent - aGutterSize
+      // realMinPercent = (aMinSize + aGutterSize) / totalSplitSize
+      // realMinSize = totalSplitItemSize * realMinPercent / 100
+      const currentASize = itemSizes[index];
+      const currentBSize = itemSizes[index + 1];
       const needFixASize =
         newASize !== currentASize &&
         newASize <= aMinSize &&
         currentASize > aMinSize;
       if (needFixASize) {
-        const fixASizePx = aMinSize;
-        const fixBSizePx = currentBSize + currentASize - aMinSize;
+        const totalSplitItemSize = itemSizes.reduce(
+          (accumulator, size) => accumulator + size,
+          0
+        );
+        const totalSplitSize =
+          totalSplitItemSize + size * (itemSizes.length - 1);
+        const realAMinPercent =
+          ((siblingMinSizes[0] ?? 0) + aGutterSize) / totalSplitSize;
+        const realAMinSize = totalSplitItemSize * realAMinPercent;
+
+        const fixASizePx = realAMinSize;
+        const fixBSizePx = currentBSize + currentASize - realAMinSize;
         const newSiblingItemSizes = [fixASizePx, fixBSizePx];
         callback(newSiblingItemSizes, moveDistance);
       }
@@ -99,8 +114,18 @@ const Gutter = ({
         newBSize <= bMinSize &&
         currentBSize > bMinSize;
       if (needFixBSize) {
-        const fixASizePx = currentASize + currentBSize - bMinSize;
-        const fixBSizePx = bMinSize;
+        const totalSplitItemSize = itemSizes.reduce(
+          (accumulator, size) => accumulator + size,
+          0
+        );
+        const totalSplitSize =
+          totalSplitItemSize + size * (itemSizes.length - 1);
+        const realBMinPercent =
+          ((siblingMinSizes[0] ?? 0) + bGutterSize) / totalSplitSize;
+        const realBMinSize = totalSplitItemSize * realBMinPercent;
+
+        const fixASizePx = currentASize + currentBSize - realBMinSize;
+        const fixBSizePx = realBMinSize;
         const newSiblingItemSizes = [fixASizePx, fixBSizePx];
         callback(newSiblingItemSizes, moveDistance);
       }
@@ -137,7 +162,7 @@ const Gutter = ({
         document.removeEventListener('mouseup', onMouseUp);
       }
     };
-  }, [mouseDown, direction, minItemSizes, itemSizes]);
+  }, [mouseDown, direction, mouseDownItemSizes, minItemSizes, itemSizes]);
 
   const getGutterClassName = () => {
     let className = 'gutter';
