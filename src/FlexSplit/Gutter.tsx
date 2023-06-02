@@ -85,9 +85,9 @@ const Gutter = ({
       }
 
       // fix size
-      // aMinSize = totalSplitSize * realMinPercent - aGutterSize
-      // realMinPercent = (aMinSize + aGutterSize) / totalSplitSize
-      // realMinSize = totalSplitItemSize * realMinPercent / 100
+      // aMinSize = totalSplitSize * windowMinPercent - aGutterSize
+      // windowMinPercent = (aMinSize + aGutterSize) / totalSplitSize
+      // windowMinSize = totalSplitItemSize * windowMinPercent / 100
       const currentASize = itemSizes[index];
       const currentBSize = itemSizes[index + 1];
       const needFixASize =
@@ -101,12 +101,12 @@ const Gutter = ({
         );
         const totalSplitSize =
           totalSplitItemSize + size * (itemSizes.length - 1);
-        const realAMinPercent =
+        const windowAMinPercent =
           ((siblingMinSizes[0] ?? 0) + aGutterSize) / totalSplitSize;
-        const realAMinSize = totalSplitItemSize * realAMinPercent;
+        const windowAMinSize = totalSplitItemSize * windowAMinPercent;
 
-        const fixASizePx = realAMinSize;
-        const fixBSizePx = currentBSize + currentASize - realAMinSize;
+        const fixASizePx = windowAMinSize;
+        const fixBSizePx = currentBSize + currentASize - windowAMinSize;
         const newSiblingItemSizes = [fixASizePx, fixBSizePx];
         callback(newSiblingItemSizes, moveDistance);
       }
@@ -121,12 +121,12 @@ const Gutter = ({
         );
         const totalSplitSize =
           totalSplitItemSize + size * (itemSizes.length - 1);
-        const realBMinPercent =
+        const windowBMinPercent =
           ((siblingMinSizes[1] ?? 0) + bGutterSize) / totalSplitSize;
-        const realBMinSize = totalSplitItemSize * realBMinPercent;
+        const windowBMinSize = totalSplitItemSize * windowBMinPercent;
 
-        const fixASizePx = currentASize + currentBSize - realBMinSize;
-        const fixBSizePx = realBMinSize;
+        const fixASizePx = currentASize + currentBSize - windowBMinSize;
+        const fixBSizePx = windowBMinSize;
         const newSiblingItemSizes = [fixASizePx, fixBSizePx];
         callback(newSiblingItemSizes, moveDistance);
       }
