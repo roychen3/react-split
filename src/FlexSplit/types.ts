@@ -1,9 +1,5 @@
 import { ReactNode } from 'react';
 
-export type SiblingInfo = {
-  startRect: DOMRect | null;
-};
-
 export type MousePosition = { x: number; y: number };
 
 export type Direction = 'horizontal' | 'vertical';
@@ -25,13 +21,15 @@ export interface GutterProps extends GutterHTMLProps {
   onGutterUp?: (event: MouseEvent) => void;
 }
 
-export interface SplitProps extends React.HTMLProps<HTMLDivElement> {
+type SplitHTMLProps = Omit<React.HTMLProps<HTMLDivElement>, 'onChange'>;
+export interface SplitProps extends SplitHTMLProps {
   children: ReactNode;
   direction?: Direction;
   minItemSizes?: ItemSizes;
-  // itemSizes?: ItemSizes;
+  itemSizes?: ItemSizes;
   gutterSize?: number;
   gutterStyle?: React.CSSProperties;
+  onChange?: (itemSizes: number[]) => void;
   onGutterDown?: (itemSizes: number[], event: MouseEvent) => void;
   onGutterMove?: (itemSizes: number[], event: MouseEvent) => void;
   onGutterUp?: (itemSizes: number[], event: MouseEvent) => void;

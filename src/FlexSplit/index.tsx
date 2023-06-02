@@ -3,9 +3,9 @@ import Gutter from './Gutter';
 import { SplitProps } from './types';
 import {
   formatItemSizes,
-  checkSizeRange,
   getStyleKey,
-  toPercent,
+  calculatePercentItemSizes,
+  formatRenderItemSizes,
 } from './utils';
 import './styles.css';
 
@@ -13,9 +13,10 @@ const Split = ({
   children,
   direction = 'horizontal',
   minItemSizes: outsideMinItemSizes = [],
-  // itemSizes: outsideItemSizes,
+  itemSizes: outsideItemSizes,
   gutterSize = 10,
   gutterStyle,
+  onChange,
   onGutterDown,
   onGutterMove,
   onGutterUp,
@@ -38,49 +39,23 @@ const Split = ({
 
   if (children instanceof Array) {
     const minItemSizes = formatItemSizes(outsideMinItemSizes, children.length);
-    const [innerItemSizes, setInnerItemSizes] = useState<number[]>([]);
-    const [percentItemSizes, setPercentItemSizes] = useState<number[]>([]);
-    const [percentStringItemSizes, setPercentStringItemSizes] = useState<
-      string[]
-    >([]);
-    const itemSizes = innerItemSizes;
+    const formattedOutsideItemSizes = formatItemSizes(
+      outsideItemSizes ?? [],
+      children.length
+    );
+    const [innerItemSizes, setInnerItemSizes] = useState<number[]>(
+      formattedOutsideItemSizes
+    );
+    const itemSizes = outsideItemSizes
+      ? formattedOutsideItemSizes
+      : innerItemSizes;
+    const percentItemSizes = calculatePercentItemSizes(itemSizes);
+    const percentStringItemSizes = formatRenderItemSizes(
+      percentItemSizes,
+      gutterSize
+    );
     const styleKey = getStyleKey(direction);
     const splitRef = useRef<HTMLDivElement>(null);
-
-    const calculatePercentItemSizes = (pixelItemSizes: number[]): number[] => {
-      const totalPixelItemSize = pixelItemSizes.reduce(
-        (accumulator, size) => accumulator + size,
-        0
-      );
-      const result = pixelItemSizes.map((pixelSize) =>
-        toPercent(pixelSize, totalPixelItemSize)
-      );
-      return result;
-    };
-
-    const updateItemSizes = useCallback(
-      (pixelItemSizes: number[]) => {
-        if (!splitRef.current) return;
-
-        setInnerItemSizes(pixelItemSizes);
-        const newPercentItemSizes = calculatePercentItemSizes(pixelItemSizes);
-        setPercentItemSizes(newPercentItemSizes);
-        const newPercentStringItemSizes = newPercentItemSizes.map(
-          (percentSize, percentSizeIdx) => {
-            if (
-              percentSizeIdx === 0 ||
-              percentSizeIdx + 1 === newPercentItemSizes.length
-            ) {
-              return `calc(${percentSize}% - ${gutterSize / 2}px`;
-            }
-
-            return `calc(${percentSize}% - ${gutterSize}px`;
-          }
-        );
-        setPercentStringItemSizes(newPercentStringItemSizes);
-      },
-      [gutterSize]
-    );
 
     // set mount size
     useEffect(() => {
@@ -98,15 +73,18 @@ const Split = ({
             return splitItemElement.getBoundingClientRect();
           }
         );
-        const splitItemSizes = splitItemRects.map((rect) => rect[styleKey]);
+        const initialSplitItemSizes = splitItemRects.map(
+          (rect) => rect[styleKey]
+        );
         splitItemElements.forEach((splitItemElement) => {
           if (splitItemElement instanceof HTMLElement) {
             splitItemElement.style.flex = '';
           }
         });
-        updateItemSizes(splitItemSizes);
+        setInnerItemSizes(initialSplitItemSizes);
+        onChange?.(initialSplitItemSizes);
       }
-    }, [updateItemSizes]);
+    }, []);
 
     return (
       <div
@@ -117,10 +95,6 @@ const Split = ({
         }`}
       >
         {children.map((eachChild, childIdx) => {
-          const checkedSize = checkSizeRange(
-            minItemSizes[childIdx],
-            itemSizes[childIdx]
-          );
           const renderSize = percentStringItemSizes[childIdx];
           const splitItemStyle = {
             [styleKey]: renderSize,
@@ -152,8 +126,9 @@ const Split = ({
                 itemSizes={itemSizes}
                 percentItemSizes={percentItemSizes}
                 onGutterDown={(newItemSizes, event) => {
-                  updateItemSizes(newItemSizes);
-                  onGutterDown?.(itemSizes, event);
+                  setInnerItemSizes(newItemSizes);
+                  onChange?.(newItemSizes);
+                  onGutterDown?.(newItemSizes, event);
                 }}
                 onGutterMove={(newSiblingItemSizes, event) => {
                   const newItemSizes = itemSizes.map(
@@ -167,7 +142,8 @@ const Split = ({
                       return itemSize;
                     }
                   );
-                  updateItemSizes(newItemSizes);
+                  setInnerItemSizes(newItemSizes);
+                  onChange?.(newItemSizes);
                   onGutterMove?.(newItemSizes, event);
                 }}
                 onGutterUp={(event) => {

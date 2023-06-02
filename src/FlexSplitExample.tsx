@@ -4,7 +4,7 @@ import Split from './FlexSplit';
 import './styles.css';
 
 export default function App() {
-  const [childrenCount, setChildrenCount] = useState(5);
+  const [childrenCount, setChildrenCount] = useState(2);
 
   const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<
     number | number[]
@@ -75,39 +75,30 @@ export default function App() {
       <div>
         <button
           onClick={() => {
-            const newSizes = 30;
+            const newSizes = 1;
             setHorizontalFlexItemSizes(newSizes);
             setVerticalFlexItemSizes(newSizes);
           }}
         >
-          set all item size to 30
+          set all item size to 1
         </button>
         <button
           onClick={() => {
-            const newSizes = 200;
+            const newSizes = [1, 2, 3, 6, 12];
             setHorizontalFlexItemSizes(newSizes);
             setVerticalFlexItemSizes(newSizes);
           }}
         >
-          set all item size to 200
+          set all item size to [1, 2, 3, 6, 12]
         </button>
         <button
           onClick={() => {
-            const newSizes = [10, 20, 30, 60, 120];
+            const newSizes = [12, 6, 3, 2, 1];
             setHorizontalFlexItemSizes(newSizes);
             setVerticalFlexItemSizes(newSizes);
           }}
         >
-          set all item size to [10, 20, 30, 60, 120]
-        </button>
-        <button
-          onClick={() => {
-            const newSizes = [120, 60, 30, 20, 10];
-            setHorizontalFlexItemSizes(newSizes);
-            setVerticalFlexItemSizes(newSizes);
-          }}
-        >
-          set all item size to [120, 60, 30, 20, 10]
+          set all item size to [12, 6, 3, 2, 1]
         </button>
         <button
           onClick={() => {
@@ -133,14 +124,17 @@ export default function App() {
         <Split
           // gutterSize={30}
           minItemSizes={minHorizontalFlexItemSizes}
-          // itemSizes={horizontalFlexItemSizes}
+          itemSizes={horizontalFlexItemSizes}
+          onChange={(newItemSizes) => {
+            console.log('newItemSizes', newItemSizes);
+            setHorizontalFlexItemSizes(newItemSizes);
+          }}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
-          onGutterMove={(newItemSizes) => {
-            // console.log('onGutterMove', newItemSizes);
-            setHorizontalFlexItemSizes(newItemSizes);
-          }}
+          // onGutterMove={(newItemSizes) => {
+          //   console.log('onGutterMove', newItemSizes);
+          // }}
           // onGutterUp={(newItemSizes) => {
           //   console.log('onGutterUp', newItemSizes);
           // }}
@@ -160,14 +154,16 @@ export default function App() {
           direction="vertical"
           // gutterSize={30}
           minItemSizes={minVerticalFlexItemSizes}
-          // itemSizes={verticalFlexItemSizes}
+          itemSizes={verticalFlexItemSizes}
+          onChange={(newItemSizes) => {
+            setVerticalFlexItemSizes(newItemSizes);
+          }}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
-          onGutterMove={(newItemSizes) => {
-            // console.log('onGutterMove', newItemSizes);
-            setVerticalFlexItemSizes(newItemSizes);
-          }}
+          // onGutterMove={(newItemSizes) => {
+          //   console.log('onGutterMove', newItemSizes);
+          // }}
           // onGutterUp={(newItemSizes) => {
           //   console.log('onGutterUp', newItemSizes);
           // }}

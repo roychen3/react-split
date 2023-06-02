@@ -61,8 +61,9 @@ const Gutter = ({
       }
 
       const startSiblingSizes = getSiblingSizes(mouseDownItemSizes, index);
-      const startASize = startSiblingSizes[0] ?? 0;
-      const startBSize = startSiblingSizes[1] ?? 0;
+      if (!startSiblingSizes[0] || !startSiblingSizes[1]) return;
+      const startASize = startSiblingSizes[0];
+      const startBSize = startSiblingSizes[1];
 
       // calculate new size
       const newASize = startASize + moveDistance;
