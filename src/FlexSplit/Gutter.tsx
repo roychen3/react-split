@@ -122,7 +122,7 @@ const Gutter = ({
         const totalSplitSize =
           totalSplitItemSize + size * (itemSizes.length - 1);
         const realBMinPercent =
-          ((siblingMinSizes[0] ?? 0) + bGutterSize) / totalSplitSize;
+          ((siblingMinSizes[1] ?? 0) + bGutterSize) / totalSplitSize;
         const realBMinSize = totalSplitItemSize * realBMinPercent;
 
         const fixASizePx = currentASize + currentBSize - realBMinSize;
