@@ -6,9 +6,6 @@ const defaultMousePosition: MousePosition = {
   x: 0,
   y: 0,
 };
-const defaultSiblingElement: SiblingInfo = {
-  startRect: null,
-};
 
 const Gutter = ({
   index,
@@ -24,8 +21,6 @@ const Gutter = ({
   ...props
 }: GutterProps) => {
   const gutterRef = useRef<HTMLDivElement>(null);
-  const previousSiblingInfoRef = useRef<SiblingInfo>(defaultSiblingElement);
-  const nextSiblingInfoRef = useRef<SiblingInfo>(defaultSiblingElement);
   const mouseDownPositionRef = useRef<MousePosition>(defaultMousePosition);
   const [mouseDown, setMouseDown] = useState(false);
   const styleKey = getStyleKey(direction);
@@ -40,18 +35,6 @@ const Gutter = ({
       y: event.clientY,
     };
 
-    if (gutterRef.current.previousSibling instanceof HTMLElement) {
-      const rect = gutterRef.current.previousSibling.getBoundingClientRect();
-      previousSiblingInfoRef.current = {
-        startRect: rect,
-      };
-    }
-    if (gutterRef.current.nextSibling instanceof HTMLElement) {
-      const rect = gutterRef.current.nextSibling.getBoundingClientRect();
-      nextSiblingInfoRef.current = {
-        startRect: rect,
-      };
-    }
     const totalSplitSize =
       gutterRef.current.parentElement.getBoundingClientRect()[styleKey];
     const newItemSizes = percentItemSizes.map((percentSize) => {
@@ -68,93 +51,72 @@ const Gutter = ({
   useEffect(() => {
     const flexMode = (
       moveDistance: number,
-      callback: (siblingItemPixelSizes: number[], moveDistance: number) => void
+      callback: (siblingItemSizes: number[], moveDistance: number) => void
     ) => {
       if (
-        !gutterRef.current
-        // !previousSiblingInfoRef.current.startRect ||
-        // !nextSiblingInfoRef.current.startRect
+        !gutterRef.current ||
+        !(gutterRef.current.parentElement instanceof HTMLElement)
       ) {
         return;
       }
 
       const currentSiblingSizes = getSiblingSizes(mouseDownItemSizes, index);
-      const currentPreviousSiblingPixelSize = currentSiblingSizes[0] ?? 0;
-      const currentNextSiblingPixelSize = currentSiblingSizes[1] ?? 0;
+      const currentASize = currentSiblingSizes[0] ?? 0;
+      const currentBSize = currentSiblingSizes[1] ?? 0;
 
       // calculate new size
-      // const newPreviousSiblingPixelSize =
-      //   previousSiblingInfoRef.current.startRect[styleKey] + moveDistance;
-      // const newNextSiblingPixelSize =
-      //   nextSiblingInfoRef.current.startRect[styleKey] - moveDistance;
-      const newPreviousSiblingPixelSize =
-        currentPreviousSiblingPixelSize + moveDistance;
-      const newNextSiblingPixelSize =
-        currentNextSiblingPixelSize - moveDistance;
+      const newASize = currentASize + moveDistance;
+      const newBSize = currentBSize - moveDistance;
 
       // calculate min size
-      const adjustPreviousGutterMinSize = index === 0 ? size / 2 : size;
-      const adjustNextGutterMinSize =
-        index + 2 === itemSizes.length ? size / 2 : size;
+      const aGutterSize = index === 0 ? size / 2 : size;
+      const bGutterSize = index + 2 === itemSizes.length ? size / 2 : size;
       const siblingMinSizes = getSiblingSizes(minItemSizes ?? [], index);
-      const previousMinPixelSize =
-        (siblingMinSizes[0] ?? 0) + adjustPreviousGutterMinSize;
-      const nextMinPixelSize =
-        (siblingMinSizes[1] ?? 0) + adjustNextGutterMinSize;
+      const aMinSize = (siblingMinSizes[0] ?? 0) + aGutterSize;
+      const bMinSize = (siblingMinSizes[1] ?? 0) + bGutterSize;
 
       // set new size
-      const newPreviousSizeBiggerMinSize =
-        newPreviousSiblingPixelSize >= previousMinPixelSize;
-      const newNextSizeBiggerMinSize =
-        newNextSiblingPixelSize >= nextMinPixelSize;
-      if (newPreviousSizeBiggerMinSize && newNextSizeBiggerMinSize) {
-        const newSiblingPixelItemSizes = [
-          newPreviousSiblingPixelSize,
-          newNextSiblingPixelSize,
-        ];
-        callback(newSiblingPixelItemSizes, moveDistance);
+      const validASize = newASize >= aMinSize;
+      const validBSize = newBSize >= bMinSize;
+      if (validASize && validBSize) {
+        const newSiblingItemSizes = [newASize, newBSize];
+        callback(newSiblingItemSizes, moveDistance);
       }
 
       // fix size
-      const needFixPreviousPxSize =
-        newPreviousSiblingPixelSize !== currentPreviousSiblingPixelSize &&
-        newPreviousSiblingPixelSize <= previousMinPixelSize &&
-        currentPreviousSiblingPixelSize > previousMinPixelSize;
-      if (needFixPreviousPxSize) {
-        const fixPreviousSizePx = previousMinPixelSize;
-        const fixNextSizePx =
-          currentNextSiblingPixelSize +
-          currentPreviousSiblingPixelSize -
-          previousMinPixelSize;
-        const newSiblingPixelItemSizes = [fixPreviousSizePx, fixNextSizePx];
-        callback(newSiblingPixelItemSizes, moveDistance);
+      const needFixASize =
+        newASize !== currentASize &&
+        newASize <= aMinSize &&
+        currentASize > aMinSize;
+      if (needFixASize) {
+        const fixASizePx = aMinSize;
+        const fixBSizePx = currentBSize + currentASize - aMinSize;
+        const newSiblingItemSizes = [fixASizePx, fixBSizePx];
+        callback(newSiblingItemSizes, moveDistance);
       }
-      const needFixNextPxSize =
-        newNextSiblingPixelSize !== currentNextSiblingPixelSize &&
-        newNextSiblingPixelSize <= nextMinPixelSize &&
-        currentNextSiblingPixelSize > nextMinPixelSize;
-      if (needFixNextPxSize) {
-        const fixPreviousSizePx =
-          currentPreviousSiblingPixelSize +
-          currentNextSiblingPixelSize -
-          nextMinPixelSize;
-        const fixNextSizePx = nextMinPixelSize;
-        const newSiblingPixelItemSizes = [fixPreviousSizePx, fixNextSizePx];
-        callback(newSiblingPixelItemSizes, moveDistance);
+      const needFixBSize =
+        newBSize !== currentBSize &&
+        newBSize <= bMinSize &&
+        currentBSize > bMinSize;
+      if (needFixBSize) {
+        const fixASizePx = currentASize + currentBSize - bMinSize;
+        const fixBSizePx = bMinSize;
+        const newSiblingItemSizes = [fixASizePx, fixBSizePx];
+        callback(newSiblingItemSizes, moveDistance);
       }
     };
     const onMouseMove = (event: MouseEvent) => {
       event.preventDefault();
       if (direction === 'horizontal') {
         const moveDistance = event.clientX - mouseDownPositionRef.current.x;
-        flexMode(moveDistance, (siblingItemPixelSizes) => {
-          onGutterMove?.(siblingItemPixelSizes, event);
+        flexMode(moveDistance, (siblingItemSizes) => {
+          onGutterMove?.(siblingItemSizes, event);
         });
       }
       if (direction === 'vertical') {
         const moveDistance = event.clientY - mouseDownPositionRef.current.y;
-        flexMode(moveDistance, (siblingItemPixelSizes) => {
-          onGutterMove?.(siblingItemPixelSizes, event);
+        flexMode(moveDistance, (siblingItemSizes) => {
+          onGutterMove?.(siblingItemSizes, event);
         });
       }
     };

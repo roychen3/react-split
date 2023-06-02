@@ -49,13 +49,13 @@ const Split = ({
 
     const calculatePercentItemSizes = (pixelItemSizes: number[]): number[] => {
       const totalPixelItemSize = pixelItemSizes.reduce(
-        (accumulator, a) => accumulator + a,
+        (accumulator, size) => accumulator + size,
         0
       );
-      const percentItemSizes = pixelItemSizes.map((pixelSize) =>
+      const result = pixelItemSizes.map((pixelSize) =>
         toPercent(pixelSize, totalPixelItemSize)
       );
-      return percentItemSizes;
+      return result;
     };
 
     const updateItemSizes = useCallback(
@@ -63,13 +63,13 @@ const Split = ({
         if (!splitRef.current) return;
 
         setInnerItemSizes(pixelItemSizes);
-        const percentItemSizes = calculatePercentItemSizes(pixelItemSizes);
-        setPercentItemSizes(percentItemSizes);
-        const percentStringItemSizes = percentItemSizes.map(
+        const newPercentItemSizes = calculatePercentItemSizes(pixelItemSizes);
+        setPercentItemSizes(newPercentItemSizes);
+        const newPercentStringItemSizes = newPercentItemSizes.map(
           (percentSize, percentSizeIdx) => {
             if (
               percentSizeIdx === 0 ||
-              percentSizeIdx + 1 === percentItemSizes.length
+              percentSizeIdx + 1 === newPercentItemSizes.length
             ) {
               return `calc(${percentSize}% - ${gutterSize / 2}px`;
             }
@@ -77,7 +77,7 @@ const Split = ({
             return `calc(${percentSize}% - ${gutterSize}px`;
           }
         );
-        setPercentStringItemSizes(percentStringItemSizes);
+        setPercentStringItemSizes(newPercentStringItemSizes);
       },
       [gutterSize]
     );
@@ -155,21 +155,20 @@ const Split = ({
                   updateItemSizes(newItemSizes);
                   onGutterDown?.(itemSizes, event);
                 }}
-                onGutterMove={(newSiblingPixelItemSizes, event) => {
-                  const newPixelItemSizes = itemSizes.map(
+                onGutterMove={(newSiblingItemSizes, event) => {
+                  const newItemSizes = itemSizes.map(
                     (itemSize, itemSizeIdx) => {
                       if (childIdx === itemSizeIdx) {
-                        return newSiblingPixelItemSizes[0];
+                        return newSiblingItemSizes[0];
                       }
                       if (childIdx + 1 === itemSizeIdx) {
-                        return newSiblingPixelItemSizes[1] ?? itemSize;
+                        return newSiblingItemSizes[1] ?? itemSize;
                       }
                       return itemSize;
                     }
                   );
-
-                  updateItemSizes(newPixelItemSizes);
-                  onGutterMove?.(newPixelItemSizes, event);
+                  updateItemSizes(newItemSizes);
+                  onGutterMove?.(newItemSizes, event);
                 }}
                 onGutterUp={(event) => {
                   onGutterUp?.(itemSizes, event);
