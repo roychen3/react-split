@@ -1,19 +1,13 @@
 import { ReactNode } from 'react';
+import { MousePosition, Direction, ItemSizes } from '../types';
+
+export { MousePosition, Direction, ItemSizes };
 
 export type SiblingInfo = {
   startRect: DOMRect | null;
 };
 
-export type MousePosition = { x: number; y: number };
-
-export type Direction = 'horizontal' | 'vertical';
-
-export type ItemSizes = number | number[];
-
-type GutterHTMLProps = Omit<
-  React.HTMLProps<HTMLDivElement>,
-  'ref' | 'className' | 'onMouseDown'
->;
+type GutterHTMLProps = React.HTMLProps<HTMLDivElement>;
 export interface GutterProps extends GutterHTMLProps {
   index: number;
   direction?: Direction;
@@ -23,19 +17,7 @@ export interface GutterProps extends GutterHTMLProps {
   onGutterUp?: () => void;
 }
 
-type FixedSplitHTMLProps = Omit<
-  React.HTMLProps<HTMLDivElement>,
-  | 'children'
-  | 'direction'
-  | 'minItemSizes'
-  | 'itemSizes'
-  | 'gutterSize'
-  | 'gutterStyle'
-  | 'onChange'
-  | 'onGutterDown'
-  | 'onGutterMove'
-  | 'onGutterUp'
->;
+type FixedSplitHTMLProps = Omit<React.HTMLProps<HTMLDivElement>, 'onChange'>;
 export interface FixedSplitProps extends FixedSplitHTMLProps {
   children: ReactNode;
   direction?: Direction;
