@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Split from './FlexSplit';
+import { FlexSplit as Split } from './Split';
 
 import './styles.css';
 
@@ -126,7 +126,7 @@ export default function App() {
           minItemSizes={minHorizontalFlexItemSizes}
           itemSizes={horizontalFlexItemSizes}
           onChange={(newItemSizes) => {
-            console.log('newItemSizes', newItemSizes);
+            // console.log('newItemSizes', newItemSizes);
             setHorizontalFlexItemSizes(newItemSizes);
           }}
           // onGutterDown={(newItemSizes) => {

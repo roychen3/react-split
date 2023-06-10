@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
 import Gutter from './Gutter';
-import { SplitProps } from './types';
+import { FlexSplitProps } from './types';
 import {
   formatItemSizes,
   getStyleKey,
@@ -9,7 +9,7 @@ import {
 } from './utils';
 import './styles.css';
 
-const Split = ({
+const FlexSplit = ({
   children,
   direction = 'horizontal',
   minItemSizes: outsideMinItemSizes = [],
@@ -21,9 +21,9 @@ const Split = ({
   onGutterMove,
   onGutterUp,
   ...props
-}: SplitProps) => {
+}: FlexSplitProps) => {
   const getSplitClassName = (): string => {
-    let className = 'split';
+    let className = 'split split--flex';
     if (direction === 'horizontal') {
       className += ' split--horizontal';
     }
@@ -169,4 +169,4 @@ const Split = ({
   );
 };
 
-export default Split;
+export default FlexSplit;

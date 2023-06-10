@@ -22,7 +22,7 @@ export interface GutterProps extends GutterHTMLProps {
 }
 
 type SplitHTMLProps = Omit<React.HTMLProps<HTMLDivElement>, 'onChange'>;
-export interface SplitProps extends SplitHTMLProps {
+export interface FlexSplitProps extends SplitHTMLProps {
   children: ReactNode;
   direction?: Direction;
   minItemSizes?: ItemSizes;

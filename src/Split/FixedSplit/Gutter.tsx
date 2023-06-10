@@ -16,7 +16,6 @@ const Gutter = ({
   style,
   direction = 'horizontal',
   minItemSizes,
-  itemSizes,
   onGutterDown,
   onGutterMove,
   onGutterUp,
@@ -24,7 +23,6 @@ const Gutter = ({
 }: GutterProps) => {
   const gutterRef = useRef<HTMLDivElement>(null);
   const previousSiblingInfoRef = useRef<SiblingInfo>(defaultSiblingElement);
-  const nextSiblingInfoRef = useRef<SiblingInfo>(defaultSiblingElement);
   const mouseDownPositionRef = useRef<MousePosition>(defaultMousePosition);
   const [mouseDown, setMouseDown] = useState(false);
   const styleKey = getStyleKey(direction);
@@ -45,13 +43,7 @@ const Gutter = ({
         startRect: rect,
       };
     }
-    if (gutterRef.current.nextSibling instanceof HTMLElement) {
-      const rect = gutterRef.current.nextSibling.getBoundingClientRect();
-      nextSiblingInfoRef.current = {
-        startRect: rect,
-      };
-    }
-    onGutterDown?.(event.nativeEvent);
+    onGutterDown?.(event);
   };
 
   useEffect(() => {
@@ -59,26 +51,22 @@ const Gutter = ({
       moveDistance: number,
       callback: (previousSiblingPixelSize: number, moveDistance: number) => void
     ) => {
-      if (
-        !gutterRef.current ||
-        !previousSiblingInfoRef.current.startRect
-      ) {
+      if (!gutterRef.current || !previousSiblingInfoRef.current.startRect) {
         return;
       }
 
-      const mouseDownPreviousSize = previousSiblingInfoRef.current.startRect[styleKey]
-      const newPreviousSiblingPixelSize = mouseDownPreviousSize + moveDistance;
+      const mouseDownPreviousSiblingSize =
+        previousSiblingInfoRef.current.startRect[styleKey];
+      const newPreviousSiblingSize =
+        mouseDownPreviousSiblingSize + moveDistance;
       const siblingMinSize = getSiblingSizes(minItemSizes, index);
       const previousMinPixelSize = siblingMinSize[0] ?? 0;
       const newSizeBiggerMinSize =
-        newPreviousSiblingPixelSize > previousMinPixelSize;
-      const currentPreviousSiblingPixelSize = mouseDownPreviousSize;
-      const currentSizeBiggerMinSize =
-        currentPreviousSiblingPixelSize > previousMinPixelSize;
+        newPreviousSiblingSize >= previousMinPixelSize;
 
       if (newSizeBiggerMinSize) {
-        callback(newPreviousSiblingPixelSize, moveDistance);
-      } else if (currentSizeBiggerMinSize) {
+        callback(newPreviousSiblingSize, moveDistance);
+      } else {
         callback(previousMinPixelSize, moveDistance);
       }
     };
@@ -91,17 +79,15 @@ const Gutter = ({
           onGutterMove?.({
             newSiblingSizes: [previousSiblingPixelSize],
             moveDistance,
-            event,
           });
         });
       }
       if (direction === 'vertical') {
         const moveDistance = event.clientY - mouseDownPositionRef.current.y;
         fixedMode(moveDistance, (previousSiblingPixelSize, moveDistance) => {
-          onGutterMove?.({
+          onGutterMove({
             newSiblingSizes: [previousSiblingPixelSize],
             moveDistance,
-            event,
           });
         });
       }
@@ -113,7 +99,7 @@ const Gutter = ({
           ? event.clientX - mouseDownPositionRef.current.x
           : event.clientY - mouseDownPositionRef.current.y;
       setMouseDown(false);
-      onGutterUp?.({ moveDistance, event });
+      onGutterUp?.({ moveDistance });
     };
 
     if (mouseDown) {
@@ -127,7 +113,7 @@ const Gutter = ({
         document.removeEventListener('mouseup', onMouseUp);
       }
     };
-  }, [mouseDown, direction, minItemSizes, itemSizes]);
+  }, [mouseDown, direction, minItemSizes]);
 
   const getGutterClassName = () => {
     let className = 'gutter';

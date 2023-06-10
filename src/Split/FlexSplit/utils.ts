@@ -32,19 +32,6 @@ export const getSiblingSizes = (
   return [null, null];
 };
 
-export const checkSizeRange = (
-  minSize: number | null,
-  size: number | null
-): number | null => {
-  if (isNumber(minSize) && isNumber(size)) {
-    return Math.max(minSize, size);
-  }
-  if (!isNumber(minSize) && isNumber(size)) {
-    return size;
-  }
-  return null;
-};
-
 export const formatItemSizes = (
   itemSizes: ItemSizes,
   length: number
@@ -70,19 +57,6 @@ export const toPercent = (pixel: number, denominator: number): number => {
   if (pixel === 0) return 0;
   if (denominator === 0) throw Error('denominator not to be "0"');
   return (pixel / denominator) * 100;
-};
-
-export const isArrayEqual = (value: any[], other: any[]): boolean => {
-  if (value.length !== other.length) return false;
-
-  let result = true;
-  for (let idx = 0; idx < value.length; idx++) {
-    if (value[idx] !== other[idx]) {
-      result = false;
-      break;
-    }
-  }
-  return result;
 };
 
 export const calculatePercentItemSizes = (

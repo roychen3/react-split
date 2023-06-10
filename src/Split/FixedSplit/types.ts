@@ -10,7 +10,6 @@ export type Direction = 'horizontal' | 'vertical';
 
 export type ItemSizes = number | number[];
 
-
 type GutterHTMLProps = Omit<
   React.HTMLProps<HTMLDivElement>,
   'ref' | 'className' | 'onMouseDown'
@@ -20,50 +19,29 @@ export interface GutterProps extends GutterHTMLProps {
   direction?: Direction;
   minItemSizes: ItemSizes;
   itemSizes: number[];
-  onGutterDown?: (event: MouseEvent) => void;
-  onGutterMove?: ({
+  onGutterDown?: (event: React.MouseEvent) => void;
+  onGutterMove: ({
     newSiblingSizes,
     moveDistance,
-    event,
   }: {
     newSiblingSizes: number[];
     moveDistance: number;
-    event: MouseEvent;
   }) => void;
-  onGutterUp?: ({
-    moveDistance,
-    event,
-  }: {
-    moveDistance: number;
-    event: MouseEvent;
-  }) => void;
+  onGutterUp?: ({ moveDistance }: { moveDistance: number }) => void;
 }
 
 export type GutterEvent = {
   itemSizes: number[];
   moveDistance: number;
-  event: MouseEvent;
 };
-export interface SplitProps extends React.HTMLProps<HTMLDivElement> {
+export interface FixedSplitProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
   direction?: Direction;
   minItemSizes?: ItemSizes;
   itemSizes?: ItemSizes;
   gutterSize?: number;
   gutterStyle?: React.CSSProperties;
-  onGutterDown?: ({
-    itemSizes,
-    moveDistance,
-    event,
-  }: GutterEvent) => void;
-  onGutterMove?: ({
-    itemSizes,
-    moveDistance,
-    event,
-  }: GutterEvent) => void;
-  onGutterUp?: ({
-    itemSizes,
-    moveDistance,
-    event,
-  }: GutterEvent) => void;
+  onGutterDown?: ({ itemSizes, moveDistance }: GutterEvent) => void;
+  onGutterMove?: ({ itemSizes, moveDistance }: GutterEvent) => void;
+  onGutterUp?: ({ itemSizes, moveDistance }: GutterEvent) => void;
 }

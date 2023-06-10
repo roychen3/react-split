@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Split from './FixedSplit';
+import { FixedSplit as Split } from './Split';
 
 import './styles.css';
 
 export default function App() {
-  const [childrenCount, setChildrenCount] = useState(5)
+  const [childrenCount, setChildrenCount] = useState(5);
 
   const [minHorizontalFixedItemSizes, setHorizontalFixedMinItemSizes] =
     useState<number | number[]>();
@@ -120,7 +120,9 @@ export default function App() {
       </div>
 
       <button
-        onClick={() => { setChildrenCount(childrenCount + 1) }}
+        onClick={() => {
+          setChildrenCount(childrenCount + 1);
+        }}
       >
         Add child
       </button>
@@ -138,12 +140,14 @@ export default function App() {
             // console.log('onGutterMove', newItemSizes);
             setHorizontalFixedItemSizes(itemSizes);
           }}
-        // onGutterUp={(newItemSizes) => {
-        //   console.log('onGutterUp', newItemSizes);
-        // }}
+          // onGutterUp={(newItemSizes) => {
+          //   console.log('onGutterUp', newItemSizes);
+          // }}
         >
           {Array.from(Array(childrenCount).keys()).map((item) => (
-            <div key={item} className="block">{item + 1} Component</div>
+            <div key={item} className="block">
+              {item + 1} Component
+            </div>
           ))}
         </Split>
       </div>
@@ -163,12 +167,14 @@ export default function App() {
             // console.log('onGutterMove', newItemSizes);
             setVerticalFixedItemSizes(itemSizes);
           }}
-        // onGutterUp={(newItemSizes) => {
-        //   console.log('onGutterUp', newItemSizes);
-        // }}
+          // onGutterUp={(newItemSizes) => {
+          //   console.log('onGutterUp', newItemSizes);
+          // }}
         >
           {Array.from(Array(childrenCount).keys()).map((item) => (
-            <div key={item} className="block">{item + 1} Component</div>
+            <div key={item} className="block">
+              {item + 1} Component
+            </div>
           ))}
         </Split>
       </div>
