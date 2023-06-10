@@ -85,9 +85,6 @@ const Gutter = ({
       }
 
       // fix size
-      // aMinSize = totalSplitSize * windowMinPercent - aGutterSize
-      // windowMinPercent = (aMinSize + aGutterSize) / totalSplitSize
-      // windowMinSize = totalSplitItemSize * windowMinPercent / 100
       const currentASize = itemSizes[index];
       const currentBSize = itemSizes[index + 1];
       const needFixASize =
