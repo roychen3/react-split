@@ -165,7 +165,7 @@ export default function App() {
           itemSizes={verticalFixedItemSizes}
           onChange={(itemSizes) => {
             console.log('onChange', itemSizes);
-            setHorizontalFixedItemSizes(itemSizes);
+            setVerticalFixedItemSizes(itemSizes);
           }}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
