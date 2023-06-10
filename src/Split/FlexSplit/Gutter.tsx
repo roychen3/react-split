@@ -44,7 +44,7 @@ const Gutter = ({
       return result;
     });
     setMouseDownItemSizes(newItemSizes);
-    onGutterDown?.(newItemSizes, event.nativeEvent);
+    onGutterDown?.(newItemSizes);
     mouseDownPositionRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -54,7 +54,7 @@ const Gutter = ({
   useEffect(() => {
     const flexMode = (
       moveDistance: number,
-      callback: (siblingItemSizes: number[], moveDistance: number) => void
+      callback: (siblingItemSizes: number[]) => void
     ) => {
       if (!gutterRef.current) {
         return;
@@ -81,7 +81,7 @@ const Gutter = ({
       const validBSize = newBSize >= bMinSize;
       if (validASize && validBSize) {
         const newSiblingItemSizes = [newASize, newBSize];
-        callback(newSiblingItemSizes, moveDistance);
+        callback(newSiblingItemSizes);
       }
 
       // fix size
@@ -105,7 +105,7 @@ const Gutter = ({
         const fixASizePx = windowAMinSize;
         const fixBSizePx = currentBSize + currentASize - windowAMinSize;
         const newSiblingItemSizes = [fixASizePx, fixBSizePx];
-        callback(newSiblingItemSizes, moveDistance);
+        callback(newSiblingItemSizes);
       }
       const needFixBSize =
         newBSize !== currentBSize &&
@@ -125,7 +125,7 @@ const Gutter = ({
         const fixASizePx = currentASize + currentBSize - windowBMinSize;
         const fixBSizePx = windowBMinSize;
         const newSiblingItemSizes = [fixASizePx, fixBSizePx];
-        callback(newSiblingItemSizes, moveDistance);
+        callback(newSiblingItemSizes);
       }
     };
     const onMouseMove = (event: MouseEvent) => {
@@ -133,20 +133,20 @@ const Gutter = ({
       if (direction === 'horizontal') {
         const moveDistance = event.clientX - mouseDownPositionRef.current.x;
         flexMode(moveDistance, (siblingItemSizes) => {
-          onGutterMove?.(siblingItemSizes, event);
+          onGutterMove?.(siblingItemSizes);
         });
       }
       if (direction === 'vertical') {
         const moveDistance = event.clientY - mouseDownPositionRef.current.y;
         flexMode(moveDistance, (siblingItemSizes) => {
-          onGutterMove?.(siblingItemSizes, event);
+          onGutterMove?.(siblingItemSizes);
         });
       }
     };
     const onMouseUp = (event: MouseEvent) => {
       event.preventDefault();
       setMouseDown(false);
-      onGutterUp?.(event);
+      onGutterUp?.();
     };
 
     if (mouseDown) {

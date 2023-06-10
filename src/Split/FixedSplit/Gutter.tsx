@@ -43,13 +43,13 @@ const Gutter = ({
         startRect: rect,
       };
     }
-    onGutterDown?.(event);
+    onGutterDown?.();
   };
 
   useEffect(() => {
     const fixedMode = (
       moveDistance: number,
-      callback: (previousSiblingPixelSize: number, moveDistance: number) => void
+      callback: (previousSiblingPixelSize: number) => void
     ) => {
       if (!gutterRef.current || !previousSiblingInfoRef.current.startRect) {
         return;
@@ -65,9 +65,9 @@ const Gutter = ({
         newPreviousSiblingSize >= previousMinPixelSize;
 
       if (newSizeBiggerMinSize) {
-        callback(newPreviousSiblingSize, moveDistance);
+        callback(newPreviousSiblingSize);
       } else {
-        callback(previousMinPixelSize, moveDistance);
+        callback(previousMinPixelSize);
       }
     };
 
@@ -75,31 +75,21 @@ const Gutter = ({
       event.preventDefault();
       if (direction === 'horizontal') {
         const moveDistance = event.clientX - mouseDownPositionRef.current.x;
-        fixedMode(moveDistance, (previousSiblingPixelSize, moveDistance) => {
-          onGutterMove?.({
-            newSiblingSizes: [previousSiblingPixelSize],
-            moveDistance,
-          });
+        fixedMode(moveDistance, (previousSiblingPixelSize) => {
+          onGutterMove?.([previousSiblingPixelSize]);
         });
       }
       if (direction === 'vertical') {
         const moveDistance = event.clientY - mouseDownPositionRef.current.y;
-        fixedMode(moveDistance, (previousSiblingPixelSize, moveDistance) => {
-          onGutterMove({
-            newSiblingSizes: [previousSiblingPixelSize],
-            moveDistance,
-          });
+        fixedMode(moveDistance, (previousSiblingPixelSize) => {
+          onGutterMove([previousSiblingPixelSize]);
         });
       }
     };
     const onMouseUp = (event: MouseEvent) => {
       event.preventDefault();
-      const moveDistance =
-        direction === 'horizontal'
-          ? event.clientX - mouseDownPositionRef.current.x
-          : event.clientY - mouseDownPositionRef.current.y;
       setMouseDown(false);
-      onGutterUp?.({ moveDistance });
+      onGutterUp?.();
     };
 
     if (mouseDown) {

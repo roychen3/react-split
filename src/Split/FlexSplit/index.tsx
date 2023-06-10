@@ -125,12 +125,12 @@ const FlexSplit = ({
                 minItemSizes={minItemSizes}
                 itemSizes={itemSizes}
                 percentItemSizes={percentItemSizes}
-                onGutterDown={(newItemSizes, event) => {
+                onGutterDown={(newItemSizes) => {
                   setInnerItemSizes(newItemSizes);
                   onChange?.(newItemSizes);
-                  onGutterDown?.(newItemSizes, event);
+                  onGutterDown?.(newItemSizes);
                 }}
-                onGutterMove={(newSiblingItemSizes, event) => {
+                onGutterMove={(newSiblingItemSizes) => {
                   const newItemSizes = itemSizes.map(
                     (itemSize, itemSizeIdx) => {
                       if (childIdx === itemSizeIdx) {
@@ -144,10 +144,10 @@ const FlexSplit = ({
                   );
                   setInnerItemSizes(newItemSizes);
                   onChange?.(newItemSizes);
-                  onGutterMove?.(newItemSizes, event);
+                  onGutterMove?.(newItemSizes);
                 }}
-                onGutterUp={(event) => {
-                  onGutterUp?.(itemSizes, event);
+                onGutterUp={() => {
+                  onGutterUp?.(itemSizes);
                 }}
               />
             </Fragment>

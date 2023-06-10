@@ -132,14 +132,17 @@ export default function App() {
         <Split
           // gutterSize={30}
           minItemSizes={minHorizontalFixedItemSizes}
-          // itemSizes={horizontalFixedItemSizes}
+          itemSizes={horizontalFixedItemSizes}
+          onChange={(itemSizes) => {
+            console.log('onChange', itemSizes);
+            setHorizontalFixedItemSizes(itemSizes);
+          }}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
-          onGutterMove={({ itemSizes }) => {
-            // console.log('onGutterMove', newItemSizes);
-            setHorizontalFixedItemSizes(itemSizes);
-          }}
+          // onGutterMove={(itemSizes) => {
+          //   console.log('onGutterMove', itemSizes);
+          // }}
           // onGutterUp={(newItemSizes) => {
           //   console.log('onGutterUp', newItemSizes);
           // }}
@@ -159,14 +162,17 @@ export default function App() {
           direction="vertical"
           // gutterSize={30}
           minItemSizes={minVerticalFixedItemSizes}
-          // itemSizes={verticalFixedItemSizes}
+          itemSizes={verticalFixedItemSizes}
+          onChange={(itemSizes) => {
+            console.log('onChange', itemSizes);
+            setHorizontalFixedItemSizes(itemSizes);
+          }}
           // onGutterDown={(newItemSizes) => {
           //   console.log('onGutterDown', newItemSizes);
           // }}
-          onGutterMove={({ itemSizes }) => {
-            // console.log('onGutterMove', newItemSizes);
-            setVerticalFixedItemSizes(itemSizes);
-          }}
+          // onGutterMove={(itemSizes) => {
+          //   console.log('onGutterMove', itemSizes);
+          // }}
           // onGutterUp={(newItemSizes) => {
           //   console.log('onGutterUp', newItemSizes);
           // }}

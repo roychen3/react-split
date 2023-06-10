@@ -1,4 +1,4 @@
-import { useState, useRef, Fragment } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
 import Gutter from './Gutter';
 import { FixedSplitProps } from './types';
 import {
@@ -17,6 +17,7 @@ const FixedSplit = ({
   itemSizes: outsideItemSizes,
   gutterSize = 10,
   gutterStyle,
+  onChange,
   onGutterDown,
   onGutterMove,
   onGutterUp,
@@ -50,6 +51,23 @@ const FixedSplit = ({
     );
     const styleKey = getStyleKey(direction);
 
+    useEffect(() => {
+      if (splitRef.current) {
+        const splitItemElements =
+          splitRef.current.querySelectorAll('.split__item');
+        const splitItemRects = Array.from(splitItemElements).map(
+          (splitItemElement) => {
+            return splitItemElement.getBoundingClientRect();
+          }
+        );
+        const initialSplitItemSizes = splitItemRects.map(
+          (rect) => rect[styleKey]
+        );
+        setInnerItemSizes(initialSplitItemSizes);
+        onChange?.(initialSplitItemSizes);
+      }
+    }, []);
+
     return (
       <div
         {...props}
@@ -79,11 +97,10 @@ const FixedSplit = ({
                 style={gutterStyle}
                 direction={direction}
                 minItemSizes={minItemSizes}
-                itemSizes={itemSizes}
-                onGutterDown={(event) => {
-                  onGutterDown?.({ itemSizes, moveDistance: 0 });
+                onGutterDown={() => {
+                  onGutterDown?.(itemSizes);
                 }}
-                onGutterMove={({ newSiblingSizes, moveDistance }) => {
+                onGutterMove={(newSiblingSizes) => {
                   const newItemSizes = itemSizes.map(
                     (itemSize, itemSizeIdx) => {
                       if (childIdx === itemSizeIdx) {
@@ -96,13 +113,11 @@ const FixedSplit = ({
                     }
                   );
                   setInnerItemSizes(newItemSizes);
-                  onGutterMove?.({
-                    itemSizes: newItemSizes,
-                    moveDistance,
-                  });
+                  onChange?.(newItemSizes);
+                  onGutterMove?.(newItemSizes);
                 }}
-                onGutterUp={({ moveDistance }) => {
-                  onGutterUp?.({ itemSizes, moveDistance });
+                onGutterUp={() => {
+                  onGutterUp?.(itemSizes);
                 }}
               />
             </Fragment>
