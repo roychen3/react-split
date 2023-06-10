@@ -10,19 +10,3 @@
   flex-direction: column;
   overflow-y: hidden;
 }
-
-.split__item {
-  overflow: hidden;
-}
-
-/* gutter styles */
-.gutter {
-  background-color: #ddd;
-}
-.gutter--horizontal {
-  cursor: col-resize;
-}
-.gutter--vertical {
-  cursor: row-resize;
-  width: 100%;
-}

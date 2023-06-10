@@ -12,19 +12,3 @@
 .split--fixed > * {
   flex-shrink: 0;
 }
-
-.split__item {
-  overflow: hidden;
-}
-
-/* gutter styles */
-.gutter {
-  background-color: #ddd;
-}
-.gutter--horizontal {
-  cursor: col-resize;
-}
-.gutter--vertical {
-  cursor: row-resize;
-  width: 100%;
-}

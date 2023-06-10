@@ -16,7 +16,7 @@ export const getStyleKey = (direction: Direction): 'width' | 'height' => {
 export const getSiblingSizes = (
   sizes: number | number[],
   idx?: number
-): number[] | null[] => {
+): [null | number, null | number] => {
   if (isNumber(sizes)) {
     return [sizes, sizes];
   }

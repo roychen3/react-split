@@ -8,6 +8,7 @@ import {
   isNumber,
   fillItemSizes,
 } from './utils';
+import '../styles.css';
 import './styles.css';
 
 const FixedSplit = ({

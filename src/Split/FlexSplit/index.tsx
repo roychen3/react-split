@@ -7,6 +7,7 @@ import {
   calculatePercentItemSizes,
   formatRenderItemSizes,
 } from './utils';
+import '../styles.css';
 import './styles.css';
 
 const FlexSplit = ({
