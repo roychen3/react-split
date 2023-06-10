@@ -2,6 +2,8 @@
 
 Split element
 
+[DEMO](https://roychen3.github.io/react-split/)
+
 ## Getting Started
 
 ```bash
