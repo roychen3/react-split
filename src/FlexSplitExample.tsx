@@ -3,7 +3,7 @@ import { FlexSplit as Split } from './Split';
 
 import './styles.css';
 
-export default function App() {
+export default function FlexSplitExample() {
   const [childrenCount, setChildrenCount] = useState(3);
 
   const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<
