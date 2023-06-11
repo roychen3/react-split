@@ -18,6 +18,7 @@ const Gutter = ({
   minItemSizes,
   itemSizes,
   percentItemSizes,
+  getSplitItemsMap,
   onGutterDown,
   onGutterMove,
   onGutterUp,
@@ -25,26 +26,45 @@ const Gutter = ({
 }: GutterProps) => {
   const gutterRef = useRef<HTMLDivElement>(null);
   const mouseDownPositionRef = useRef<MousePosition>(defaultMousePosition);
+  const marginRef = useRef({ a: 0 });
+  const sectionSizeRef = useRef(0);
   const [mouseDown, setMouseDown] = useState(false);
   const [mouseDownItemSizes, setMouseDownItemSizes] = useState<number[]>([]);
   const styleKey = getStyleKey(direction);
 
   const onMouseDown = (event: React.MouseEvent) => {
-    if (!gutterRef.current || !gutterRef.current.parentElement) return;
+    if (
+      !gutterRef.current ||
+      !gutterRef.current.parentElement ||
+      !(gutterRef.current.previousSibling instanceof HTMLElement) ||
+      !(gutterRef.current.nextSibling instanceof HTMLElement)
+    )
+      return;
 
     event.preventDefault();
     setMouseDown(true);
-    const totalSplitSize =
-      gutterRef.current.parentElement.getBoundingClientRect()[styleKey];
-    const newItemSizes = percentItemSizes.map((percentSize) => {
-      const result =
-        ((totalSplitSize - (percentItemSizes.length - 1) * size) *
-          percentSize) /
-        100;
-      return result;
+    const splitItemsMap = getSplitItemsMap();
+    const splitItemElements = Array.from(splitItemsMap).map((item) => item[1]);
+    const splitItemRects = splitItemElements.map((splitItemElement) => {
+      return splitItemElement.getBoundingClientRect();
+    });
+    const newItemSizes = splitItemRects.map((rect) => {
+      return rect[styleKey];
     });
     setMouseDownItemSizes(newItemSizes);
     onGutterDown?.(newItemSizes);
+    marginRef.current = {
+      a:
+        direction === 'horizontal'
+          ? event.clientX - gutterRef.current.getBoundingClientRect().left
+          : event.clientY - gutterRef.current.getBoundingClientRect().top,
+    };
+    sectionSizeRef.current =
+      direction === 'horizontal'
+        ? gutterRef.current.nextSibling.getBoundingClientRect().right -
+          gutterRef.current.previousSibling.getBoundingClientRect().left
+        : gutterRef.current.nextSibling.getBoundingClientRect().bottom -
+          gutterRef.current.previousSibling.getBoundingClientRect().top;
     mouseDownPositionRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -53,28 +73,32 @@ const Gutter = ({
 
   useEffect(() => {
     const flexMode = (
-      moveDistance: number,
+      currentPosition: number,
       callback: (siblingItemSizes: number[]) => void
     ) => {
-      if (!gutterRef.current) {
+      if (
+        !gutterRef.current ||
+        !(gutterRef.current.previousSibling instanceof HTMLElement)
+      ) {
         return;
       }
 
-      const startSiblingSizes = getSiblingSizes(mouseDownItemSizes, index);
-      if (!startSiblingSizes[0] || !startSiblingSizes[1]) return;
-      const startASize = startSiblingSizes[0];
-      const startBSize = startSiblingSizes[1];
-
       // calculate new size
-      const newASize = startASize + moveDistance;
-      const newBSize = startBSize - moveDistance;
+      const calculateGutterPosition =
+        direction === 'horizontal'
+          ? gutterRef.current.previousSibling.getBoundingClientRect().left
+          : gutterRef.current.previousSibling.getBoundingClientRect().top;
+      const newASize =
+        currentPosition - calculateGutterPosition - marginRef.current.a;
+      const newBSize =
+        sectionSizeRef.current -
+        newASize -
+        gutterRef.current.getBoundingClientRect()[styleKey];
 
       // calculate min size
-      const aGutterSize = index === 0 ? size / 2 : size;
-      const bGutterSize = index + 2 === itemSizes.length ? size / 2 : size;
       const siblingMinSizes = getSiblingSizes(minItemSizes ?? [], index);
-      const aMinSize = (siblingMinSizes[0] ?? 0) + aGutterSize;
-      const bMinSize = (siblingMinSizes[1] ?? 0) + bGutterSize;
+      const aMinSize = siblingMinSizes[0] ?? 0;
+      const bMinSize = siblingMinSizes[1] ?? 0;
 
       // set new size
       const validASize = newASize >= aMinSize;
@@ -82,63 +106,35 @@ const Gutter = ({
       if (validASize && validBSize) {
         const newSiblingItemSizes = [newASize, newBSize];
         callback(newSiblingItemSizes);
-      }
-
-      // fix size
-      const currentASize = itemSizes[index];
-      const currentBSize = itemSizes[index + 1];
-      const needFixASize =
-        newASize !== currentASize &&
-        newASize <= aMinSize &&
-        currentASize > aMinSize;
-      if (needFixASize) {
-        const totalSplitItemSize = itemSizes.reduce(
-          (accumulator, size) => accumulator + size,
-          0
-        );
-        const totalSplitSize =
-          totalSplitItemSize + size * (itemSizes.length - 1);
-        const windowAMinPercent =
-          ((siblingMinSizes[0] ?? 0) + aGutterSize) / totalSplitSize;
-        const windowAMinSize = totalSplitItemSize * windowAMinPercent;
-
-        const fixASizePx = windowAMinSize;
-        const fixBSizePx = currentBSize + currentASize - windowAMinSize;
-        const newSiblingItemSizes = [fixASizePx, fixBSizePx];
-        callback(newSiblingItemSizes);
-      }
-      const needFixBSize =
-        newBSize !== currentBSize &&
-        newBSize <= bMinSize &&
-        currentBSize > bMinSize;
-      if (needFixBSize) {
-        const totalSplitItemSize = itemSizes.reduce(
-          (accumulator, size) => accumulator + size,
-          0
-        );
-        const totalSplitSize =
-          totalSplitItemSize + size * (itemSizes.length - 1);
-        const windowBMinPercent =
-          ((siblingMinSizes[1] ?? 0) + bGutterSize) / totalSplitSize;
-        const windowBMinSize = totalSplitItemSize * windowBMinPercent;
-
-        const fixASizePx = currentASize + currentBSize - windowBMinSize;
-        const fixBSizePx = windowBMinSize;
-        const newSiblingItemSizes = [fixASizePx, fixBSizePx];
-        callback(newSiblingItemSizes);
+      } else {
+        // fix size
+        if (!validASize) {
+          const fixBSize =
+            sectionSizeRef.current -
+            aMinSize -
+            gutterRef.current.getBoundingClientRect()[styleKey];
+          const newSiblingItemSizes = [aMinSize, fixBSize];
+          callback(newSiblingItemSizes);
+        }
+        if (!validBSize) {
+          const fixASize =
+            sectionSizeRef.current -
+            bMinSize -
+            gutterRef.current.getBoundingClientRect()[styleKey];
+          const newSiblingItemSizes = [fixASize, bMinSize];
+          callback(newSiblingItemSizes);
+        }
       }
     };
     const onMouseMove = (event: MouseEvent) => {
       event.preventDefault();
       if (direction === 'horizontal') {
-        const moveDistance = event.clientX - mouseDownPositionRef.current.x;
-        flexMode(moveDistance, (siblingItemSizes) => {
+        flexMode(event.clientX, (siblingItemSizes) => {
           onGutterMove?.(siblingItemSizes);
         });
       }
       if (direction === 'vertical') {
-        const moveDistance = event.clientY - mouseDownPositionRef.current.y;
-        flexMode(moveDistance, (siblingItemSizes) => {
+        flexMode(event.clientY, (siblingItemSizes) => {
           onGutterMove?.(siblingItemSizes);
         });
       }

@@ -10,6 +10,7 @@ export interface GutterProps extends GutterHTMLProps {
   minItemSizes: ItemSizes;
   itemSizes: number[];
   percentItemSizes: number[];
+  getSplitItemsMap: () => Map<string, HTMLDivElement>;
   onGutterDown?: (newItemSizes: number[]) => void;
   onGutterMove?: (newSiblingSizes: number[]) => void;
   onGutterUp?: () => void;

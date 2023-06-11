@@ -4,7 +4,6 @@ import { FlexSplitProps } from './types';
 import {
   formatItemSizes,
   getStyleKey,
-  calculatePercentItemSizes,
   formatRenderItemSizes,
 } from './utils';
 import '../styles.css';
@@ -44,36 +43,68 @@ const FlexSplit = ({
       outsideItemSizes ?? [],
       children.length
     );
+    const styleKey = getStyleKey(direction);
+    const splitRef = useRef<HTMLDivElement>(null);
+    const splitItemsRef = useRef<Map<string, HTMLDivElement>>();
+    const getSplitItemsMap = () => {
+      if (!splitItemsRef.current) {
+        splitItemsRef.current = new Map();
+      }
+      return splitItemsRef.current;
+    };
     const [innerItemSizes, setInnerItemSizes] = useState<number[]>(
       formattedOutsideItemSizes
     );
     const itemSizes = outsideItemSizes
       ? formattedOutsideItemSizes
       : innerItemSizes;
-    const percentItemSizes = calculatePercentItemSizes(itemSizes);
+
+    // renderSize = totalSize * percent - gutterSize
+    // renderSize + gutterSize = totalSize * percent
+    // (renderSize + gutterSize)/ totalSize =  percent
+    const calculateCssSize = (
+      renderItemSizes: number[],
+      gutterSize: number
+    ) => {
+      const totalRenderItemSize =
+        splitRef.current?.getBoundingClientRect()[styleKey];
+
+      const result = renderItemSizes.map((renderSize, idx) => {
+        if (!totalRenderItemSize) return (1 / renderItemSizes.length) * 100;
+        const calculateGutterSize =
+          idx === 0 || idx + 1 === renderItemSizes.length
+            ? gutterSize / 2
+            : gutterSize;
+
+        const percent =
+          ((renderSize + calculateGutterSize) / totalRenderItemSize) * 100;
+        return percent;
+      });
+
+      return result;
+    };
+    const percentItemSizes = calculateCssSize(itemSizes, gutterSize);
     const percentStringItemSizes = formatRenderItemSizes(
       percentItemSizes,
       gutterSize
     );
-    const styleKey = getStyleKey(direction);
-    const splitRef = useRef<HTMLDivElement>(null);
 
     // set mount size
     useEffect(() => {
       if (splitRef.current) {
         // auto fill split item size
-        const splitItemElements =
-          splitRef.current.querySelectorAll('.split__item');
+        const splitItemsMap = getSplitItemsMap();
+        const splitItemElements = Array.from(splitItemsMap).map(
+          (item) => item[1]
+        );
         splitItemElements.forEach((splitItemElement) => {
           if (splitItemElement instanceof HTMLElement) {
             splitItemElement.style.flex = '1';
           }
         });
-        const splitItemRects = Array.from(splitItemElements).map(
-          (splitItemElement) => {
-            return splitItemElement.getBoundingClientRect();
-          }
-        );
+        const splitItemRects = splitItemElements.map((splitItemElement) => {
+          return splitItemElement.getBoundingClientRect();
+        });
         const initialSplitItemSizes = splitItemRects.map(
           (rect) => rect[styleKey]
         );
@@ -104,6 +135,14 @@ const FlexSplit = ({
           if (childIdx + 1 === children.length) {
             return (
               <div
+                ref={(node) => {
+                  const splitItemsMap = getSplitItemsMap();
+                  if (node instanceof HTMLElement) {
+                    splitItemsMap.set(`${childIdx}`, node);
+                  } else {
+                    splitItemsMap.delete(`${childIdx}`);
+                  }
+                }}
                 key={childIdx}
                 className="split__item"
                 style={splitItemStyle}
@@ -115,7 +154,18 @@ const FlexSplit = ({
 
           return (
             <Fragment key={childIdx}>
-              <div className="split__item" style={splitItemStyle}>
+              <div
+                ref={(node) => {
+                  const splitItemsMap = getSplitItemsMap();
+                  if (node instanceof HTMLElement) {
+                    splitItemsMap.set(`${childIdx}`, node);
+                  } else {
+                    splitItemsMap.delete(`${childIdx}`);
+                  }
+                }}
+                className="split__item"
+                style={splitItemStyle}
+              >
                 {eachChild}
               </div>
               <Gutter
@@ -126,6 +176,7 @@ const FlexSplit = ({
                 minItemSizes={minItemSizes}
                 itemSizes={itemSizes}
                 percentItemSizes={percentItemSizes}
+                getSplitItemsMap={getSplitItemsMap}
                 onGutterDown={(newItemSizes) => {
                   setInnerItemSizes(newItemSizes);
                   onChange?.(newItemSizes);
