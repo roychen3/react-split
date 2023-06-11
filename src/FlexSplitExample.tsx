@@ -4,7 +4,7 @@ import { FlexSplit as Split } from './Split';
 import './styles.css';
 
 export default function App() {
-  const [childrenCount, setChildrenCount] = useState(2);
+  const [childrenCount, setChildrenCount] = useState(3);
 
   const [minHorizontalFlexItemSizes, setHorizontalFlexMinItemSizes] = useState<
     number | number[]
@@ -84,21 +84,21 @@ export default function App() {
         </button>
         <button
           onClick={() => {
-            const newSizes = [1, 2, 3, 6, 12];
+            const newSizes = [10, 20, 30, 60, 120];
             setHorizontalFlexItemSizes(newSizes);
             setVerticalFlexItemSizes(newSizes);
           }}
         >
-          set all item size to [1, 2, 3, 6, 12]
+          set all item size to [10, 20, 30, 60, 120]
         </button>
         <button
           onClick={() => {
-            const newSizes = [12, 6, 3, 2, 1];
+            const newSizes = [120, 60, 30, 20, 10];
             setHorizontalFlexItemSizes(newSizes);
             setVerticalFlexItemSizes(newSizes);
           }}
         >
-          set all item size to [12, 6, 3, 2, 1]
+          set all item size to [120, 60, 30, 20, 10]
         </button>
         <button
           onClick={() => {
@@ -122,11 +122,11 @@ export default function App() {
       <h1>Horizontal & Flex</h1>
       <div className="container container-horizontal">
         <Split
-          // gutterSize={30}
+          // gutterSize={60}
           minItemSizes={minHorizontalFlexItemSizes}
           itemSizes={horizontalFlexItemSizes}
           onChange={(newItemSizes) => {
-            // console.log('newItemSizes', newItemSizes);
+            console.log('newItemSizes', newItemSizes);
             setHorizontalFlexItemSizes(newItemSizes);
           }}
           // onGutterDown={(newItemSizes) => {
@@ -152,10 +152,11 @@ export default function App() {
       <div className="container container-vertical">
         <Split
           direction="vertical"
-          // gutterSize={30}
+          // gutterSize={60}
           minItemSizes={minVerticalFlexItemSizes}
           itemSizes={verticalFlexItemSizes}
           onChange={(newItemSizes) => {
+            console.log('newItemSizes', newItemSizes);
             setVerticalFlexItemSizes(newItemSizes);
           }}
           // onGutterDown={(newItemSizes) => {
