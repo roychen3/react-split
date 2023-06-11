@@ -54,11 +54,17 @@ const Gutter = ({
     setMouseDownItemSizes(newItemSizes);
     onGutterDown?.(newItemSizes);
     marginRef.current = {
-      a: event.clientX - gutterRef.current.getBoundingClientRect().left,
+      a:
+        direction === 'horizontal'
+          ? event.clientX - gutterRef.current.getBoundingClientRect().left
+          : event.clientY - gutterRef.current.getBoundingClientRect().top,
     };
     sectionSizeRef.current =
-      gutterRef.current.nextSibling.getBoundingClientRect().right -
-      gutterRef.current.previousSibling.getBoundingClientRect().left;
+      direction === 'horizontal'
+        ? gutterRef.current.nextSibling.getBoundingClientRect().right -
+          gutterRef.current.previousSibling.getBoundingClientRect().left
+        : gutterRef.current.nextSibling.getBoundingClientRect().bottom -
+          gutterRef.current.previousSibling.getBoundingClientRect().top;
     mouseDownPositionRef.current = {
       x: event.clientX,
       y: event.clientY,
@@ -78,10 +84,12 @@ const Gutter = ({
       }
 
       // calculate new size
+      const calculateGutterPosition =
+        direction === 'horizontal'
+          ? gutterRef.current.previousSibling.getBoundingClientRect().left
+          : gutterRef.current.previousSibling.getBoundingClientRect().top;
       const newASize =
-        currentPosition -
-        gutterRef.current.previousSibling.getBoundingClientRect().left -
-        marginRef.current.a;
+        currentPosition - calculateGutterPosition - marginRef.current.a;
       const newBSize =
         sectionSizeRef.current -
         newASize -
