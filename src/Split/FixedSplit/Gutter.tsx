@@ -120,6 +120,7 @@ const Gutter = ({
   return (
     <div
       {...props}
+      data-testid="split__gutter"
       ref={gutterRef}
       style={{
         ...style,
