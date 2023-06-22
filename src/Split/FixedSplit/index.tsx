@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, Fragment } from 'react';
+import { isEqual } from 'lodash';
 import Gutter from './Gutter';
 import { FixedSplitProps } from './types';
 import {
@@ -40,6 +41,14 @@ const FixedSplit = ({
 
   if (children instanceof Array) {
     const splitRef = useRef<HTMLDivElement>(null);
+    const splitItemsRef = useRef<Map<string, HTMLDivElement>>();
+    const getSplitItemsMap = (): Map<string, HTMLDivElement> => {
+      if (!splitItemsRef.current) {
+        splitItemsRef.current = new Map();
+        return splitItemsRef.current;
+      }
+      return splitItemsRef.current;
+    };
     const minItemSizes = formatItemSizes(outsideMinItemSizes, children.length);
     const formattedOutsideItemSizes = formatItemSizes(
       outsideItemSizes ?? [],
@@ -52,22 +61,12 @@ const FixedSplit = ({
     );
     const styleKey = getStyleKey(direction);
 
-    useEffect(() => {
-      if (splitRef.current) {
-        const splitItemElements =
-          splitRef.current.querySelectorAll('.split__item');
-        const splitItemRects = Array.from(splitItemElements).map(
-          (splitItemElement) => {
-            return splitItemElement.getBoundingClientRect();
-          }
-        );
-        const initialSplitItemSizes = splitItemRects.map(
-          (rect) => rect[styleKey]
-        );
-        setInnerItemSizes(initialSplitItemSizes);
-        onChange?.(initialSplitItemSizes);
+    const updateItemSizes = (newValue: number[]) => {
+      if (!isEqual(itemSizes, newValue)) {
+        setInnerItemSizes(newValue);
+        onChange?.(newValue);
       }
-    }, []);
+    };
 
     return (
       <div
@@ -89,7 +88,19 @@ const FixedSplit = ({
 
           return (
             <Fragment key={childIdx}>
-              <div className="split__item" style={splitItemStyle}>
+              <div
+                data-testid="split__item"
+                className="split__item"
+                style={splitItemStyle}
+                ref={(element) => {
+                  const splitItemsMap = getSplitItemsMap();
+                  if (element instanceof HTMLElement) {
+                    splitItemsMap.set(`${childIdx}`, element);
+                  } else {
+                    splitItemsMap.delete(`${childIdx}`);
+                  }
+                }}
+              >
                 {eachChild}
               </div>
               <Gutter
@@ -99,7 +110,13 @@ const FixedSplit = ({
                 direction={direction}
                 minItemSizes={minItemSizes}
                 onGutterDown={() => {
-                  onGutterDown?.(itemSizes);
+                  const splitItemsMap = getSplitItemsMap();
+                  const newItemSizes = Array.from(splitItemsMap).map((item) => {
+                    const element = item[1];
+                    return element.getBoundingClientRect()[styleKey];
+                  });
+                  updateItemSizes(newItemSizes);
+                  onGutterDown?.(newItemSizes);
                 }}
                 onGutterMove={(newSiblingSizes) => {
                   const newItemSizes = itemSizes.map(

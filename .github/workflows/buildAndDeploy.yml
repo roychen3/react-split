@@ -2,13 +2,16 @@ name: Build and Deploy
 permissions:
   contents: write
 on:
-  push:
+  workflow_run:
+    workflows: [Run Testing]
+    types: [completed]
     branches:
       - main
 jobs:
   deploy:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
