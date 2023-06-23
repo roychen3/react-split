@@ -29,6 +29,36 @@ const setRect = (element: HTMLElement, rect: Rect = defaultRect) => {
     writable: true,
   });
 };
+const initialRect = (
+  splitItem: number,
+  gutter: number,
+  direction: 'vertical' | 'horizontal' = 'horizontal'
+) => {
+  const itemElements = screen.getAllByTestId('split__item');
+  expect(itemElements).toHaveLength(4);
+  itemElements.forEach((item, itemIdx) => {
+    setRect(item, {
+      ...defaultRect,
+      [direction === 'horizontal' ? 'width' : 'height']: splitItem,
+      [direction === 'horizontal' ? 'left' : 'top']:
+        itemIdx * splitItem + itemIdx * gutter,
+      [direction === 'horizontal' ? 'right' : 'bottom']:
+        (itemIdx + 1) * splitItem + itemIdx * gutter,
+    });
+  });
+  const gutterElements = screen.getAllByTestId('split__gutter');
+  expect(gutterElements).toHaveLength(3);
+  gutterElements.forEach((item, itemIdx) => {
+    setRect(item, {
+      ...defaultRect,
+      [direction === 'horizontal' ? 'width' : 'height']: gutter,
+      [direction === 'horizontal' ? 'left' : 'top']:
+        (itemIdx + 1) * splitItem + itemIdx * gutter,
+      [direction === 'horizontal' ? 'right' : 'bottom']:
+        (itemIdx + 1) * splitItem + (itemIdx + 1) * gutter,
+    });
+  });
+};
 
 describe('Component: Split', () => {
   test('only one item', async () => {
@@ -41,8 +71,8 @@ describe('Component: Split', () => {
   });
 
   test('horizontal: adjust size', async () => {
-    const gutter = 10;
     const splitItem = 100;
+    const gutter = 10;
     const onChange = jest.fn();
     const onGutterDown = jest.fn();
     const onGutterMove = jest.fn();
@@ -59,27 +89,13 @@ describe('Component: Split', () => {
         ))}
       </FlexSplit>
     );
-
     const itemElements = screen.getAllByTestId('split__item');
     expect(itemElements).toHaveLength(4);
-    itemElements.forEach((item, itemIdx) => {
-      setRect(item, {
-        ...defaultRect,
-        width: splitItem,
-        left: itemIdx * splitItem + itemIdx * gutter,
-        right: (itemIdx + 1) * splitItem + itemIdx * gutter,
-      });
-    });
+
     const gutterElements = screen.getAllByTestId('split__gutter');
     expect(gutterElements).toHaveLength(3);
-    gutterElements.forEach((item, itemIdx) => {
-      setRect(item, {
-        ...defaultRect,
-        width: gutter,
-        left: (itemIdx + 1) * splitItem + itemIdx * gutter,
-        right: (itemIdx + 1) * splitItem + (itemIdx + 1) * gutter,
-      });
-    });
+
+    initialRect(splitItem, gutter, 'horizontal');
 
     // move gutter1 position form 100 to 150
     {
@@ -207,8 +223,8 @@ describe('Component: Split', () => {
   });
 
   test('vertical: adjust size', async () => {
-    const gutter = 10;
     const splitItem = 100;
+    const gutter = 10;
     const onChange = jest.fn();
     const onGutterDown = jest.fn();
     const onGutterMove = jest.fn();
@@ -229,24 +245,11 @@ describe('Component: Split', () => {
 
     const itemElements = screen.getAllByTestId('split__item');
     expect(itemElements).toHaveLength(4);
-    itemElements.forEach((item, itemIdx) => {
-      setRect(item, {
-        ...defaultRect,
-        height: splitItem,
-        top: itemIdx * splitItem + itemIdx * gutter,
-        bottom: (itemIdx + 1) * splitItem + itemIdx * gutter,
-      });
-    });
+
     const gutterElements = screen.getAllByTestId('split__gutter');
     expect(gutterElements).toHaveLength(3);
-    gutterElements.forEach((item, itemIdx) => {
-      setRect(item, {
-        ...defaultRect,
-        height: gutter,
-        top: (itemIdx + 1) * splitItem + itemIdx * gutter,
-        bottom: (itemIdx + 1) * splitItem + (itemIdx + 1) * gutter,
-      });
-    });
+
+    initialRect(splitItem, gutter, 'vertical');
 
     // move gutter1 position form 100 to 150
     {
@@ -374,8 +377,8 @@ describe('Component: Split', () => {
   });
 
   test('mini item size', async () => {
-    const gutter = 10;
     const splitItem = 100;
+    const gutter = 10;
     const onChange = jest.fn();
     const onGutterDown = jest.fn();
     const onGutterMove = jest.fn();
@@ -396,24 +399,11 @@ describe('Component: Split', () => {
 
     const itemElements = screen.getAllByTestId('split__item');
     expect(itemElements).toHaveLength(4);
-    itemElements.forEach((item, itemIdx) => {
-      setRect(item, {
-        ...defaultRect,
-        width: splitItem,
-        left: itemIdx * splitItem + itemIdx * gutter,
-        right: (itemIdx + 1) * splitItem + itemIdx * gutter,
-      });
-    });
+
     const gutterElements = screen.getAllByTestId('split__gutter');
     expect(gutterElements).toHaveLength(3);
-    gutterElements.forEach((item, itemIdx) => {
-      setRect(item, {
-        ...defaultRect,
-        width: gutter,
-        left: (itemIdx + 1) * splitItem + itemIdx * gutter,
-        right: (itemIdx + 1) * splitItem + (itemIdx + 1) * gutter,
-      });
-    });
+
+    initialRect(splitItem, gutter, 'horizontal');
 
     // move gutter1 position form 100 to 0
     {
