@@ -41,6 +41,8 @@ describe('Component: Split', () => {
   });
 
   test('horizontal: adjust size', async () => {
+    const gutter = 10;
+    const splitItem = 100;
     const onChange = jest.fn();
     const onGutterDown = jest.fn();
     const onGutterMove = jest.fn();
@@ -61,28 +63,22 @@ describe('Component: Split', () => {
     const itemElements = screen.getAllByTestId('split__item');
     expect(itemElements).toHaveLength(4);
     itemElements.forEach((item, itemIdx) => {
-      const width = 100;
-      const gutter = 10;
       setRect(item, {
         ...defaultRect,
-        width,
-        left: itemIdx * width + itemIdx * gutter,
-        right: (itemIdx + 1) * width + itemIdx * gutter,
+        width: splitItem,
+        left: itemIdx * splitItem + itemIdx * gutter,
+        right: (itemIdx + 1) * splitItem + itemIdx * gutter,
       });
-      // console.log('itemElements', item.getBoundingClientRect());
     });
     const gutterElements = screen.getAllByTestId('split__gutter');
     expect(gutterElements).toHaveLength(3);
     gutterElements.forEach((item, itemIdx) => {
-      const width = 10;
-      const splitItem = 100;
       setRect(item, {
         ...defaultRect,
-        width,
-        left: (itemIdx + 1) * splitItem + itemIdx * width,
-        right: (itemIdx + 1) * splitItem + (itemIdx + 1) * width,
+        width: gutter,
+        left: (itemIdx + 1) * splitItem + itemIdx * gutter,
+        right: (itemIdx + 1) * splitItem + (itemIdx + 1) * gutter,
       });
-      // console.log('gutterElements', item.getBoundingClientRect());
     });
 
     // move gutter1 position form 100 to 150
@@ -101,72 +97,113 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onGutterMove.mock.calls[0][0]).toEqual([150, 50, 100, 100]);
-      expect(onChange.mock.calls[1][0]).toEqual([150, 50, 100, 100]);
+      const expectMovedSizes = [150, 50, 100, 100];
+      expect(onGutterMove.mock.calls[0][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[1][0]).toEqual(expectMovedSizes);
+      const newARect = {
+        width: 150,
+        left: 0,
+        right: 150,
+      };
+      const newBRect = {
+        width: 50,
+        left: newARect.right + gutter,
+        right: newARect.right + gutter + 50,
+      };
       setRect(itemElements[0], {
         ...defaultRect,
-        width: 150,
+        ...newARect,
       });
       setRect(itemElements[1], {
         ...defaultRect,
-        width: 50,
+        ...newBRect,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
-      expect(onGutterUp.mock.calls[0][0]).toEqual([150, 50, 100, 100]);
+      expect(onGutterUp.mock.calls[0][0]).toEqual(expectMovedSizes);
     }
 
-    // move gutter2 position form 300 to 350
-    // {
-    //   const gutterElement = gutterElements[1];
-    //   const startPosition = {
-    //     clientX: 300,
-    //     clientY: 0,
-    //   };
-    //   fireEvent.mouseDown(gutterElement, startPosition);
-    //   expect(onGutterDown.mock.calls[1][0]).toEqual([200, 100, 100, 100]);
+    // move gutter2 position form 215 to 265
+    {
+      const gutterElement = gutterElements[1];
+      const startPosition = {
+        clientX: 215,
+        clientY: 0,
+      };
+      fireEvent.mouseDown(gutterElement, startPosition);
+      expect(onGutterDown.mock.calls[1][0]).toEqual([150, 50, 100, 100]);
 
-    //   const endPosition = {
-    //     clientX: 350,
-    //     clientY: 0,
-    //   };
-    //   fireEvent.mouseMove(gutterElement, endPosition);
-    //   expect(onGutterMove.mock.calls[1][0]).toEqual([200, 150, 100, 100]);
-    //   expect(onChange.mock.calls[2][0]).toEqual([200, 150, 100, 100]);
-    //   setRect(itemElements[1], {
-    //     ...defaultRect,
-    //     width: 150,
-    //   });
+      const endPosition = {
+        clientX: 265,
+        clientY: 0,
+      };
+      fireEvent.mouseMove(gutterElement, endPosition);
+      const expectMovedSizes = [150, 100, 50, 100];
+      expect(onGutterMove.mock.calls[1][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[2][0]).toEqual(expectMovedSizes);
+      const newARect = {
+        width: 100,
+        left: 150 + gutter,
+        right: 150 + gutter + 100,
+      };
+      const newBRect = {
+        width: 50,
+        left: newARect.right + gutter,
+        right: newARect.right + gutter + 50,
+      };
+      setRect(itemElements[1], {
+        ...defaultRect,
+        ...newARect,
+      });
+      setRect(itemElements[2], {
+        ...defaultRect,
+        ...newBRect,
+      });
 
-    //   fireEvent.mouseUp(gutterElement, endPosition);
-    //   expect(onGutterUp.mock.calls[1][0]).toEqual([200, 150, 100, 100]);
-    // }
+      fireEvent.mouseUp(gutterElement, endPosition);
+      expect(onGutterUp.mock.calls[1][0]).toEqual(expectMovedSizes);
+    }
 
-    // move gutter2 position form 350 to 0
-    // {
-    //   const gutterElement = gutterElements[1];
-    //   const startPosition = {
-    //     clientX: 350,
-    //     clientY: 0,
-    //   };
-    //   fireEvent.mouseDown(gutterElement, startPosition);
-    //   expect(onGutterDown.mock.calls[2][0]).toEqual([200, 150, 100, 100]);
+    // move gutter2 position form 265 to 0
+    {
+      const gutterElement = gutterElements[1];
+      const startPosition = {
+        clientX: 265,
+        clientY: 0,
+      };
+      fireEvent.mouseDown(gutterElement, startPosition);
+      expect(onGutterDown.mock.calls[2][0]).toEqual([150, 100, 50, 100]);
 
-    //   const endPosition = {
-    //     clientX: 0,
-    //     clientY: 0,
-    //   };
-    //   fireEvent.mouseMove(gutterElement, endPosition);
-    //   expect(onGutterMove.mock.calls[2][0]).toEqual([200, 0, 100, 100]);
-    //   expect(onChange.mock.calls[3][0]).toEqual([200, 0, 100, 100]);
-    //   setRect(itemElements[1], {
-    //     ...defaultRect,
-    //     width: 0,
-    //   });
+      const endPosition = {
+        clientX: 0,
+        clientY: 0,
+      };
+      fireEvent.mouseMove(gutterElement, endPosition);
+      const expectMovedSizes = [150, 0, 150, 100];
+      expect(onGutterMove.mock.calls[2][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[3][0]).toEqual(expectMovedSizes);
+      const newARect = {
+        width: 0,
+        left: 150 + gutter,
+        right: 150 + gutter + 0,
+      };
+      const newBRect = {
+        width: 150,
+        left: newARect.right + gutter,
+        right: newARect.right + gutter + 150,
+      };
+      setRect(itemElements[1], {
+        ...defaultRect,
+        ...newARect,
+      });
+      setRect(itemElements[2], {
+        ...defaultRect,
+        ...newBRect,
+      });
 
-    //   fireEvent.mouseUp(gutterElement, endPosition);
-    //   expect(onGutterUp.mock.calls[2][0]).toEqual([200, 0, 100, 100]);
-    // }
+      fireEvent.mouseUp(gutterElement, endPosition);
+      expect(onGutterUp.mock.calls[2][0]).toEqual(expectMovedSizes);
+    }
   });
 
   // test('vertical: adjust size', async () => {

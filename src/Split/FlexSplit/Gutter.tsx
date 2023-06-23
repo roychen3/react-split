@@ -69,10 +69,6 @@ const Gutter = ({
       x: event.clientX,
       y: event.clientY,
     };
-
-    console.log('marginRef.current', marginRef.current);
-    console.log('sectionSizeRef.current', sectionSizeRef.current);
-    console.log('mouseDownPositionRef.current', mouseDownPositionRef.current);
   };
 
   useEffect(() => {
@@ -86,14 +82,11 @@ const Gutter = ({
       ) {
         return;
       }
-      console.log('gutterRef.current.previousSibling.getBoundingClientRect()', gutterRef.current.previousSibling.getBoundingClientRect());
-      console.log('currentPosition', currentPosition);
       // calculate new size
       const calculateGutterPosition =
         direction === 'horizontal'
           ? gutterRef.current.previousSibling.getBoundingClientRect().left
           : gutterRef.current.previousSibling.getBoundingClientRect().top;
-      console.log('calculateGutterPosition', calculateGutterPosition);
       const newASize =
         currentPosition - calculateGutterPosition - marginRef.current.a;
       const newBSize =
@@ -111,7 +104,6 @@ const Gutter = ({
       const validBSize = newBSize >= bMinSize;
       if (validASize && validBSize) {
         const newSiblingItemSizes = [newASize, newBSize];
-        console.log('newSiblingItemSizes', newSiblingItemSizes);
         callback(newSiblingItemSizes);
       } else {
         // fix size

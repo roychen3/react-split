@@ -88,39 +88,10 @@ const FlexSplit = ({
 
     const updateItemSizes = (newItemSizes: number[]) => {
       if (!isEqual(itemSizes, newItemSizes)) {
-        // console.log('updateItemSizes', newItemSizes);
         setInnerItemSizes(newItemSizes);
         onChange?.(newItemSizes);
       }
     };
-
-    // set mount size
-    // useEffect(() => {
-    //   if (splitRef.current) {
-    //     // auto fill split item size
-    //     const splitItemsMap = getSplitItemsMap();
-    //     const splitItemElements = Array.from(splitItemsMap).map(
-    //       (item) => item[1]
-    //     );
-    //     splitItemElements.forEach((splitItemElement) => {
-    //       if (splitItemElement instanceof HTMLElement) {
-    //         splitItemElement.style.flexGrow = '1';
-    //       }
-    //     });
-    //     // const splitItemRects = splitItemElements.map((splitItemElement) => {
-    //     //   return splitItemElement.getBoundingClientRect();
-    //     // });
-    //     // const initialSplitItemSizes = splitItemRects.map(
-    //     //   (rect) => rect[styleKey]
-    //     // );
-    //     // splitItemElements.forEach((splitItemElement) => {
-    //     //   if (splitItemElement instanceof HTMLElement) {
-    //     //     splitItemElement.style.flexGrow = '';
-    //     //   }
-    //     // });
-    //     // updateItemSizes(initialSplitItemSizes);
-    //   }
-    // }, []);
 
     return (
       <div
@@ -184,7 +155,6 @@ const FlexSplit = ({
                 percentItemSizes={percentItemSizes}
                 getSplitItemsMap={getSplitItemsMap}
                 onGutterDown={(newItemSizes) => {
-                  console.log('onGutterDown', newItemSizes);
                   updateItemSizes(newItemSizes);
                   onGutterDown?.(newItemSizes);
                 }}
@@ -200,7 +170,6 @@ const FlexSplit = ({
                       return itemSize;
                     }
                   );
-                  console.log('onGutterMove', newItemSizes);
                   updateItemSizes(newItemSizes);
                   onGutterMove?.(newItemSizes);
                 }}
