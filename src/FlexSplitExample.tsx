@@ -126,7 +126,7 @@ export default function FlexSplitExample() {
           minItemSizes={minHorizontalFlexItemSizes}
           itemSizes={horizontalFlexItemSizes}
           onChange={(newItemSizes) => {
-            console.log('newItemSizes', newItemSizes);
+            console.log('horizontal newItemSizes', newItemSizes);
             setHorizontalFlexItemSizes(newItemSizes);
           }}
           // onGutterDown={(newItemSizes) => {
@@ -156,7 +156,7 @@ export default function FlexSplitExample() {
           minItemSizes={minVerticalFlexItemSizes}
           itemSizes={verticalFlexItemSizes}
           onChange={(newItemSizes) => {
-            console.log('newItemSizes', newItemSizes);
+            console.log('vertical newItemSizes', newItemSizes);
             setVerticalFlexItemSizes(newItemSizes);
           }}
           // onGutterDown={(newItemSizes) => {

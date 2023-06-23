@@ -10,3 +10,7 @@
   flex-direction: column;
   overflow-y: hidden;
 }
+
+.split.split--flex > .split__item {
+  flex-grow: 1;
+}

@@ -5,6 +5,7 @@
 /* gutter styles */
 .gutter {
   background-color: #ddd;
+  flex-shrink: 0;
 }
 .gutter--horizontal {
   cursor: col-resize;

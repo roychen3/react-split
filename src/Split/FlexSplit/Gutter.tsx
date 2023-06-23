@@ -82,7 +82,6 @@ const Gutter = ({
       ) {
         return;
       }
-
       // calculate new size
       const calculateGutterPosition =
         direction === 'horizontal'
@@ -178,6 +177,7 @@ const Gutter = ({
         ...style,
         [styleKey]: `${size}px`,
       }}
+      data-testid="split__gutter"
       className={gutterClassName}
       onMouseDown={onMouseDown}
     ></div>
