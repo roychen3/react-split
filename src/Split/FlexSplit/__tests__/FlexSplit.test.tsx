@@ -60,7 +60,7 @@ const initialRect = (
   });
 };
 
-describe('Component: Split', () => {
+describe('Component: FlexSplit', () => {
   test('only one item', async () => {
     render(
       <FlexSplit>

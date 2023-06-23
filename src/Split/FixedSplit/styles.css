@@ -9,6 +9,6 @@
   flex-direction: column;
   overflow-y: hidden;
 }
-.split--fixed > * {
+.split--fixed > .split__item {
   flex-shrink: 0;
 }

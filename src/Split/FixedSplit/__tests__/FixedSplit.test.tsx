@@ -30,11 +30,10 @@ const setRect = (element: HTMLElement, rect: Rect = defaultRect) => {
   });
 };
 
-describe('Component: Split', () => {
+describe('Component: FixedSplit', () => {
   test('only one item', async () => {
-    const onGutterMove = jest.fn();
     render(
-      <FixedSplit direction="vertical" onGutterMove={onGutterMove}>
+      <FixedSplit>
         <div>item</div>
       </FixedSplit>
     );
@@ -53,7 +52,7 @@ describe('Component: Split', () => {
         onGutterMove={onGutterMove}
         onGutterUp={onGutterUp}
       >
-        {[...Array(4).keys()].map((key) => (
+        {Array.from(Array(4).keys()).map((key) => (
           <div key={key}>{key}</div>
         ))}
       </FixedSplit>
@@ -86,15 +85,16 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onGutterMove.mock.calls[0][0]).toEqual([200, 100, 100, 100]);
-      expect(onChange.mock.calls[1][0]).toEqual([200, 100, 100, 100]);
+      const expectMovedSizes = [200, 100, 100, 100];
+      expect(onGutterMove.mock.calls[0][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[1][0]).toEqual(expectMovedSizes);
       setRect(itemElements[0], {
         ...defaultRect,
         width: 200,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
-      expect(onGutterUp.mock.calls[0][0]).toEqual([200, 100, 100, 100]);
+      expect(onGutterUp.mock.calls[0][0]).toEqual(expectMovedSizes);
     }
 
     // move gutter2 position form 300 to 350
@@ -112,15 +112,16 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onGutterMove.mock.calls[1][0]).toEqual([200, 150, 100, 100]);
-      expect(onChange.mock.calls[2][0]).toEqual([200, 150, 100, 100]);
+      const expectMovedSizes = [200, 150, 100, 100];
+      expect(onGutterMove.mock.calls[1][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[2][0]).toEqual(expectMovedSizes);
       setRect(itemElements[1], {
         ...defaultRect,
         width: 150,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
-      expect(onGutterUp.mock.calls[1][0]).toEqual([200, 150, 100, 100]);
+      expect(onGutterUp.mock.calls[1][0]).toEqual(expectMovedSizes);
     }
 
     // move gutter2 position form 350 to 0
@@ -138,15 +139,16 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onGutterMove.mock.calls[2][0]).toEqual([200, 0, 100, 100]);
-      expect(onChange.mock.calls[3][0]).toEqual([200, 0, 100, 100]);
+      const expectMovedSizes = [200, 0, 100, 100];
+      expect(onGutterMove.mock.calls[2][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[3][0]).toEqual(expectMovedSizes);
       setRect(itemElements[1], {
         ...defaultRect,
         width: 0,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
-      expect(onGutterUp.mock.calls[2][0]).toEqual([200, 0, 100, 100]);
+      expect(onGutterUp.mock.calls[2][0]).toEqual(expectMovedSizes);
     }
   });
 
@@ -163,7 +165,7 @@ describe('Component: Split', () => {
         onGutterMove={onGutterMove}
         onGutterUp={onGutterUp}
       >
-        {[...Array(4).keys()].map((key) => (
+        {Array.from(Array(4).keys()).map((key) => (
           <div key={key}>{key}</div>
         ))}
       </FixedSplit>
@@ -196,15 +198,16 @@ describe('Component: Split', () => {
         clientY: 200,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onGutterMove.mock.calls[0][0]).toEqual([200, 100, 100, 100]);
-      expect(onChange.mock.calls[1][0]).toEqual([200, 100, 100, 100]);
+      const expectMovedSizes = [200, 100, 100, 100];
+      expect(onGutterMove.mock.calls[0][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[1][0]).toEqual(expectMovedSizes);
       setRect(itemElements[0], {
         ...defaultRect,
         height: 200,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
-      expect(onGutterUp.mock.calls[0][0]).toEqual([200, 100, 100, 100]);
+      expect(onGutterUp.mock.calls[0][0]).toEqual(expectMovedSizes);
     }
 
     // move gutter2 position form 300 to 350
@@ -222,15 +225,16 @@ describe('Component: Split', () => {
         clientY: 350,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onGutterMove.mock.calls[1][0]).toEqual([200, 150, 100, 100]);
-      expect(onChange.mock.calls[2][0]).toEqual([200, 150, 100, 100]);
+      const expectMovedSizes = [200, 150, 100, 100];
+      expect(onGutterMove.mock.calls[1][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[2][0]).toEqual(expectMovedSizes);
       setRect(itemElements[1], {
         ...defaultRect,
         height: 150,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
-      expect(onGutterUp.mock.calls[1][0]).toEqual([200, 150, 100, 100]);
+      expect(onGutterUp.mock.calls[1][0]).toEqual(expectMovedSizes);
     }
 
     // move gutter2 position form 350 to 0
@@ -248,23 +252,33 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onGutterMove.mock.calls[2][0]).toEqual([200, 0, 100, 100]);
-      expect(onChange.mock.calls[3][0]).toEqual([200, 0, 100, 100]);
+      const expectMovedSizes = [200, 0, 100, 100];
+      expect(onGutterMove.mock.calls[2][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[3][0]).toEqual(expectMovedSizes);
       setRect(itemElements[1], {
         ...defaultRect,
         height: 0,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
-      expect(onGutterUp.mock.calls[2][0]).toEqual([200, 0, 100, 100]);
+      expect(onGutterUp.mock.calls[2][0]).toEqual(expectMovedSizes);
     }
   });
 
   test('mini item size', async () => {
     const onChange = jest.fn();
+    const onGutterDown = jest.fn();
+    const onGutterMove = jest.fn();
+    const onGutterUp = jest.fn();
     render(
-      <FixedSplit minItemSizes={50} onChange={onChange}>
-        {[...Array(4).keys()].map((key) => (
+      <FixedSplit
+        minItemSizes={50}
+        onChange={onChange}
+        onGutterDown={onGutterDown}
+        onGutterMove={onGutterMove}
+        onGutterUp={onGutterUp}
+      >
+        {Array.from(Array(4).keys()).map((key) => (
           <div key={key}>{key}</div>
         ))}
       </FixedSplit>
@@ -289,6 +303,7 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseDown(gutterElement, startPosition);
+      expect(onGutterDown.mock.calls[0][0]).toEqual([100, 100, 100, 100]);
       expect(onChange.mock.calls[0][0]).toEqual([100, 100, 100, 100]);
 
       const endPosition = {
@@ -296,13 +311,16 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onChange.mock.calls[1][0]).toEqual([50, 100, 100, 100]);
+      const expectMovedSizes = [50, 100, 100, 100];
+      expect(onGutterMove.mock.calls[0][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[1][0]).toEqual(expectMovedSizes);
       setRect(itemElements[0], {
         ...defaultRect,
         width: 50,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
+      expect(onGutterUp.mock.calls[0][0]).toEqual(expectMovedSizes);
     }
 
     // move gutter2 position form 150 to 0
@@ -319,13 +337,16 @@ describe('Component: Split', () => {
         clientY: 0,
       };
       fireEvent.mouseMove(gutterElement, endPosition);
-      expect(onChange.mock.calls[2][0]).toEqual([50, 50, 100, 100]);
+      const expectMovedSizes = [50, 50, 100, 100];
+      expect(onGutterMove.mock.calls[1][0]).toEqual(expectMovedSizes);
+      expect(onChange.mock.calls[2][0]).toEqual(expectMovedSizes);
       setRect(itemElements[1], {
         ...defaultRect,
         width: 50,
       });
 
       fireEvent.mouseUp(gutterElement, endPosition);
+      expect(onGutterUp.mock.calls[1][0]).toEqual(expectMovedSizes);
     }
   });
 });
