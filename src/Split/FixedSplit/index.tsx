@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Fragment } from 'react';
+import { useState, useRef, Fragment } from 'react';
 import { isEqual } from 'lodash';
 import Gutter from './Gutter';
 import { FixedSplitProps } from './types';
