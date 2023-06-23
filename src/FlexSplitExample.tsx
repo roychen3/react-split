@@ -20,9 +20,6 @@ export default function FlexSplitExample() {
     number | number[]
   >();
 
-  // console.log('horizontalFlexItemSizes', horizontalFlexItemSizes);
-  // console.log('verticalFlexItemSizes', verticalFlexItemSizes);
-
   return (
     <div className="App">
       <h3>set min item size</h3>
