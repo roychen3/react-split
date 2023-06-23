@@ -19,6 +19,9 @@ export default function App() {
     number | number[]
   >();
 
+  // console.log('horizontalFixedItemSizes', horizontalFixedItemSizes);
+  // console.log('verticalFixedItemSizes', verticalFixedItemSizes);
+
   return (
     <div className="App">
       <h3>set min item size</h3>

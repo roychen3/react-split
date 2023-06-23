@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
+import { isEqual } from 'lodash';
 import Gutter from './Gutter';
 import { FlexSplitProps } from './types';
-import {
-  formatItemSizes,
-  getStyleKey,
-  formatRenderItemSizes,
-} from './utils';
+import { formatItemSizes, getStyleKey, formatRenderItemSizes } from './utils';
 import '../styles.css';
 import './styles.css';
 
@@ -89,34 +86,41 @@ const FlexSplit = ({
       gutterSize
     );
 
-    // set mount size
-    useEffect(() => {
-      if (splitRef.current) {
-        // auto fill split item size
-        const splitItemsMap = getSplitItemsMap();
-        const splitItemElements = Array.from(splitItemsMap).map(
-          (item) => item[1]
-        );
-        splitItemElements.forEach((splitItemElement) => {
-          if (splitItemElement instanceof HTMLElement) {
-            splitItemElement.style.flex = '1';
-          }
-        });
-        const splitItemRects = splitItemElements.map((splitItemElement) => {
-          return splitItemElement.getBoundingClientRect();
-        });
-        const initialSplitItemSizes = splitItemRects.map(
-          (rect) => rect[styleKey]
-        );
-        splitItemElements.forEach((splitItemElement) => {
-          if (splitItemElement instanceof HTMLElement) {
-            splitItemElement.style.flex = '';
-          }
-        });
-        setInnerItemSizes(initialSplitItemSizes);
-        onChange?.(initialSplitItemSizes);
+    const updateItemSizes = (newItemSizes: number[]) => {
+      if (!isEqual(itemSizes, newItemSizes)) {
+        // console.log('updateItemSizes', newItemSizes);
+        setInnerItemSizes(newItemSizes);
+        onChange?.(newItemSizes);
       }
-    }, []);
+    };
+
+    // set mount size
+    // useEffect(() => {
+    //   if (splitRef.current) {
+    //     // auto fill split item size
+    //     const splitItemsMap = getSplitItemsMap();
+    //     const splitItemElements = Array.from(splitItemsMap).map(
+    //       (item) => item[1]
+    //     );
+    //     splitItemElements.forEach((splitItemElement) => {
+    //       if (splitItemElement instanceof HTMLElement) {
+    //         splitItemElement.style.flexGrow = '1';
+    //       }
+    //     });
+    //     // const splitItemRects = splitItemElements.map((splitItemElement) => {
+    //     //   return splitItemElement.getBoundingClientRect();
+    //     // });
+    //     // const initialSplitItemSizes = splitItemRects.map(
+    //     //   (rect) => rect[styleKey]
+    //     // );
+    //     // splitItemElements.forEach((splitItemElement) => {
+    //     //   if (splitItemElement instanceof HTMLElement) {
+    //     //     splitItemElement.style.flexGrow = '';
+    //     //   }
+    //     // });
+    //     // updateItemSizes(initialSplitItemSizes);
+    //   }
+    // }, []);
 
     return (
       <div
@@ -144,6 +148,7 @@ const FlexSplit = ({
                   }
                 }}
                 key={childIdx}
+                data-testid="split__item"
                 className="split__item"
                 style={splitItemStyle}
               >
@@ -163,6 +168,7 @@ const FlexSplit = ({
                     splitItemsMap.delete(`${childIdx}`);
                   }
                 }}
+                data-testid="split__item"
                 className="split__item"
                 style={splitItemStyle}
               >
@@ -178,8 +184,8 @@ const FlexSplit = ({
                 percentItemSizes={percentItemSizes}
                 getSplitItemsMap={getSplitItemsMap}
                 onGutterDown={(newItemSizes) => {
-                  setInnerItemSizes(newItemSizes);
-                  onChange?.(newItemSizes);
+                  console.log('onGutterDown', newItemSizes);
+                  updateItemSizes(newItemSizes);
                   onGutterDown?.(newItemSizes);
                 }}
                 onGutterMove={(newSiblingItemSizes) => {
@@ -194,8 +200,8 @@ const FlexSplit = ({
                       return itemSize;
                     }
                   );
-                  setInnerItemSizes(newItemSizes);
-                  onChange?.(newItemSizes);
+                  console.log('onGutterMove', newItemSizes);
+                  updateItemSizes(newItemSizes);
                   onGutterMove?.(newItemSizes);
                 }}
                 onGutterUp={() => {
